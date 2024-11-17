@@ -3,6 +3,7 @@
 .admin {
   &__header {
     background-color: $primary-theme-color1;
+    box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.2);
 
     button {
       width: 160px;
@@ -10,6 +11,7 @@
   }
 
   &__sidemenu {
-    width: 400px;
+    // width: 400px;
+    height: calc(100vh - $header-height);
   }
 }

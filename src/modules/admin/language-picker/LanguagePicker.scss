@@ -1,70 +1,65 @@
-.dropdown-wrapper {
-  position: relative;
-  width: 300px;
-}
+@import '../../../styles/variables';
 
-.dropdown-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: white;
-  cursor: pointer;
-}
+$container-width: 320px;
 
-.dropdown-search {
-  border: none;
-  outline: none;
-  flex-grow: 1;
-  font-size: 1rem;
-}
+.dropdown {
+  &__wrapper {
+    width: $container-width;
+    border-right: 1px solid $border-color-light;
+  }
 
-.dropdown-arrow {
-  margin-left: 8px;
-  transform: rotate(180deg);
-  transition: transform 0.2s ease-in-out;
-}
+  &__header {
+    border: 1px solid $border-color-light;
+    border-radius: $default-border-radius;
+    background-color: $white-color;
+    cursor: pointer;
 
-.dropdown-arrow.open {
-  transform: rotate(0);
-}
+    .dropdown-arrow {
+      margin-left: 8px;
+      transform: rotate(180deg);
+      transition: transform 0.2s ease-in-out;
 
-.dropdown-list {
-  position: absolute;
-  left: 0;
-  right: 0;
-  max-height: 270px;
-  overflow-y: auto;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: white;
-  z-index: 10;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-  padding: 0;
-  margin: 0;
-  list-style: none;
-}
+      &.open {
+        transform: rotate(0);
+      }
+    }
+  }
 
-.dropdown-item {
-  padding: 10px;
-  cursor: pointer;
-}
+  &__search {
+    height: 40px;
+    border: none;
+    outline: none;
+    font-size: 14px;
+  }
 
-.dropdown-item:hover {
-  background-color: #f0f0f0;
-}
+  &__list {
+    left: 16px;
+    right: 0;
+    width: calc(100% - 32px);
+    max-height: 270px;
+    background-color: $white-color;
+    border: 1px solid $border-color-light;
+    border-top: none;
+    border-radius: $default-border-radius;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    z-index: 10;
+  }
 
-.selected-languages {
-  margin-top: 20px;
-}
+  &__item {
+    cursor: pointer;
 
-.selected-languages ul {
-  list-style: none;
-  padding: 0;
-}
+    &:hover {
+      background-color: #f0f0f0;
+    }
+  }
 
-.selected-languages li {
-  padding: 5px 0;
+  &__loader {
+    width: $container-width;
+
+    img {
+      width: 80px;
+      height: 80px;
+    }
+  }
 }
