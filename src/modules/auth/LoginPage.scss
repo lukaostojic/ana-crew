@@ -1,0 +1,17 @@
+@import '../../styles/variables';
+
+.login {
+  &__wrapper {
+    height: 100vh;
+  }
+
+  &__inner {
+    width: 450px;
+    background-color: $primary-theme-color1;
+    border-radius: $default-border-radius;
+
+    button {
+      width: 200px;
+    }
+  }
+}

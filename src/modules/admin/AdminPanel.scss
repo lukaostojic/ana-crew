@@ -1,0 +1,7 @@
+@import '../../styles/variables';
+
+.admin {
+  &__header {
+    background-color: $primary-theme-color1;
+  }
+}

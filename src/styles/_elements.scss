@@ -1,0 +1,23 @@
+.button {
+  padding: 8px;
+  border-radius: $default-border-radius;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s ease-in-out;
+
+  &--primary {
+    background-color: $primary-button-color;
+    color: $secondary-text-color;
+  }
+
+  &:hover {
+    filter: brightness(1.5);
+  }
+}
+
+.input {
+  padding: 8px;
+  border: 1px solid $border-color-light;
+  border-radius: $default-border-radius;
+}
