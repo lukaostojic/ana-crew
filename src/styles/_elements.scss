@@ -6,6 +6,17 @@
   cursor: pointer;
   transition: all 0.25s ease-in-out;
 
+  &--icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    span:last-child {
+      margin-left: 8px;
+      font-size: 20px;
+    }
+  }
+
   &--primary {
     background-color: $primary-button-color;
     color: $secondary-text-color;

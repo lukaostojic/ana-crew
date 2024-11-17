@@ -3,5 +3,13 @@
 .admin {
   &__header {
     background-color: $primary-theme-color1;
+
+    button {
+      width: 160px;
+    }
+  }
+
+  &__sidemenu {
+    width: 400px;
   }
 }

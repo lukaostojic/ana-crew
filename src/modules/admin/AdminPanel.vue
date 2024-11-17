@@ -1,10 +1,17 @@
 <template>
   <div class="admin__header d-flex justify-sb align-center px-4 py-4 w-100">
     <h2>Admin Panel</h2>
-    <!-- <ul>
-      <li v-for="user in users" :key="user.id">{{ user.email }}</li>
-    </ul> -->
-    <button @click="logout" class="button button--primary">Logout</button>
+    <div class="d-flex">
+      <button @click="goToWebsite" class="button button--primary button--icon mr-2">
+        <span>Go to Website</span><span class="material-symbols-outlined"> globe </span>
+      </button>
+      <button @click="logout" class="button button--primary button--icon">
+        <span>Logout</span><span class="material-symbols-outlined"> logout </span>
+      </button>
+    </div>
+  </div>
+  <div class="admin__sidemenu">
+    <language-picker />
   </div>
 </template>
 
@@ -14,34 +21,29 @@ import { useRouter } from 'vue-router'
 import { useAuthStore } from '../../stores/auth'
 import { db } from '../../config/firebase'
 import { collection, getDocs } from 'firebase/firestore'
-
-type IUser = {
-  id: string
-  email?: string
-}
+import LanguagePicker from './language-picker/LanguagePicker.vue'
 
 export default defineComponent({
+  components: { LanguagePicker },
   name: 'AdminPanel',
   setup() {
-    const users = ref<IUser[]>([])
     const router = useRouter()
     const authStore = useAuthStore()
 
-    onMounted(async () => {
-      const usersCollection = collection(db, 'users')
-      const snapshot = await getDocs(usersCollection)
-      users.value = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
-      console.log('Users fetched:', users.value)
-    })
+    onMounted(async () => {})
 
     const logout = async () => {
       await authStore.logout()
       router.push('/auth')
     }
 
+    const goToWebsite = () => {
+      router.push('/')
+    }
+
     return {
-      users,
       logout,
+      goToWebsite,
     }
   },
 })

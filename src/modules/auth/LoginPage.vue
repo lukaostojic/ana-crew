@@ -14,9 +14,7 @@
         <button type="submit" class="button button--primary mb-2">Login</button>
       </form>
       <div class="d-flex justify-center">
-        <button @click="leaveAdminSection" class="button button--primary">
-          Leave Admin Section
-        </button>
+        <button @click="leaveAdminSection" class="button button--primary">Leave Admin Area</button>
       </div>
     </div>
   </div>
