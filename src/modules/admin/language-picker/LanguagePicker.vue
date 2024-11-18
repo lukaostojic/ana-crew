@@ -3,7 +3,7 @@
     <div class="dropdown__header d-flex justify-sb align-center" @click="toggleDropdown">
       <input
         type="text"
-        placeholder="Search languages"
+        placeholder="Search all languages"
         v-model="searchQuery"
         class="dropdown__search input w-100"
       />
@@ -21,15 +21,29 @@
         {{ language.name }}
       </li>
     </ul>
-    <div class="mt-5">
-      <h4>Default Language</h4>
-      <p>{{ defaultLanguage?.name || 'No default set' }}</p>
-    </div>
-    <div class="mt-5">
+    <div class="selected-languages__list mt-5" :class="{ blured: isOpen }">
       <h4>Selected Languages</h4>
       <ul>
-        <li v-for="language in selectedLanguages" :key="language.code">
-          {{ language.name }}
+        <li
+          v-if="defaultLanguage"
+          class="selected-languages__item d-flex align-center justify-sb p-2 my-2"
+          :class="{ selected: isSelectedLanguage(defaultLanguage) }"
+          @click="handleLanguageClick(defaultLanguage)"
+        >
+          <span>{{ defaultLanguage?.name || 'No default set' }} - Default</span>
+          <span class="material-symbols-outlined default-icon"> lock </span>
+        </li>
+        <li
+          class="selected-languages__item d-flex align-center justify-sb p-2 mb-2"
+          v-for="language in selectedLanguages"
+          :key="language.code"
+          :class="{ selected: isSelectedLanguage(language) }"
+          @click="handleLanguageClick(language)"
+        >
+          <span>{{ language.name }}</span>
+          <span class="material-symbols-outlined delete-icon" @click="deleteLanguage(language)">
+            delete
+          </span>
         </li>
       </ul>
     </div>
@@ -41,9 +55,13 @@
 
 <script lang="ts">
 import { defineComponent, ref, computed, onMounted, onUnmounted } from 'vue'
-import { languages } from '../../../config/languages'
-import { db } from '../../../config/firebase'
-import { getDoc, setDoc, doc } from 'firebase/firestore'
+import {
+  fetchSelectedLanguages,
+  fetchDefaultLanguage,
+  updateSelectedLanguages,
+  deleteSelectedLanguage,
+} from '../../../services/localization.service'
+import { languages as allLanguages } from '../../../config/languages'
 
 export default defineComponent({
   name: 'CustomLanguageDropdown',
@@ -51,48 +69,32 @@ export default defineComponent({
     const isOpen = ref(false)
     const searchQuery = ref('')
     const dropdown = ref<HTMLElement | null>(null)
-    const availableLanguages = ref([...languages])
+    const availableLanguages = ref([...allLanguages])
     const selectedLanguages = ref<{ code: string; name: string }[]>([])
     const defaultLanguage = ref<{ code: string; name: string } | null>(null)
+    const selectedLanguage = ref<{ code: string; name: string } | null>(null)
     const isLoading = ref(true)
 
     const fetchLanguages = async () => {
-      const langRef = doc(db, 'languages', 'selectedLanguages')
-      const settingsRef = doc(db, 'settings', 'defaultLanguage')
-      const langSnap = await getDoc(langRef)
+      try {
+        const [selected, defaultLang] = await Promise.all([
+          fetchSelectedLanguages(),
+          fetchDefaultLanguage(),
+        ])
 
-      if (langSnap.exists()) {
-        const data = langSnap.data()
-        selectedLanguages.value = data?.selectedLanguages || []
-        availableLanguages.value = availableLanguages.value.filter(
+        selectedLanguages.value = selected
+        defaultLanguage.value = defaultLang
+        availableLanguages.value = allLanguages.filter(
           (language) =>
-            !selectedLanguages.value.some((selected) => selected.code === language.code),
+            !selected.some((selected) => selected.code === language.code) &&
+            language.code !== defaultLang?.code,
         )
-      } else {
-        console.log('No selected languages found!')
-      }
-
-      const settingsSnap = await getDoc(settingsRef)
-
-      if (settingsSnap.exists()) {
-        const settingsData = settingsSnap.data() as { code: string; name: string }
-        defaultLanguage.value = settingsData
+        selectedLanguage.value = defaultLanguage.value
+      } catch (error) {
+        console.error('Error fetching languages:', error)
+      } finally {
         isLoading.value = false
-      } else {
-        console.log('No default language found!')
       }
-    }
-
-    const updateLanguagesInFirebase = async (
-      selectedLanguages: { code: string; name: string }[],
-    ) => {
-      const langRef = doc(db, 'languages', 'selectedLanguages')
-      await setDoc(langRef, { selectedLanguages })
-    }
-
-    const updateDefaultLanguageInFirebase = async (language: { code: string; name: string }) => {
-      const settingsRef = doc(db, 'settings', 'defaultLanguage')
-      await setDoc(settingsRef, { defaultLanguage: language })
     }
 
     const toggleDropdown = () => {
@@ -102,6 +104,28 @@ export default defineComponent({
     const closeDropdown = (event: MouseEvent) => {
       if (dropdown.value && !dropdown.value.contains(event.target as Node)) {
         isOpen.value = false
+        searchQuery.value = ''
+      }
+    }
+
+    const handleLanguageClick = (language: { code: string; name: string }) => {
+      selectedLanguage.value = language
+    }
+
+    const isSelectedLanguage = (language: { code: string; name: string }) => {
+      return selectedLanguage.value?.code === language.code
+    }
+
+    const deleteLanguage = async (language: { code: string; name: string }) => {
+      try {
+        selectedLanguages.value = selectedLanguages.value.filter(
+          (selected) => selected.code !== language.code,
+        )
+
+        availableLanguages.value.push(language)
+        await deleteSelectedLanguage(language)
+      } catch (error) {
+        console.error('Error deleting language:', error)
       }
     }
 
@@ -109,24 +133,17 @@ export default defineComponent({
       if (!selectedLanguages.value.some((lang) => lang.code === language.code)) {
         selectedLanguages.value.push(language)
         availableLanguages.value = availableLanguages.value.filter((l) => l.code !== language.code)
-        await updateLanguagesInFirebase(selectedLanguages.value)
+        await updateSelectedLanguages(selectedLanguages.value)
         isOpen.value = false
         searchQuery.value = ''
       }
     }
 
     const filteredLanguages = computed(() =>
-      availableLanguages.value
-        .filter((language) => language.code !== defaultLanguage.value?.code)
-        .filter((language) =>
-          language.name.toLowerCase().includes(searchQuery.value.toLowerCase()),
-        ),
+      availableLanguages.value.filter((language) =>
+        language.name.toLowerCase().includes(searchQuery.value.toLowerCase()),
+      ),
     )
-
-    // const setAsDefaultLanguage = async (language: { code: string; name: string }) => {
-    //   defaultLanguage.value = language
-    //   await updateDefaultLanguageInFirebase(language)
-    // }
 
     onMounted(() => {
       fetchLanguages()
@@ -140,14 +157,16 @@ export default defineComponent({
     return {
       isOpen,
       searchQuery,
-      toggleDropdown,
-      selectLanguage,
       filteredLanguages,
       selectedLanguages,
       defaultLanguage,
       dropdown,
       isLoading,
-      // setAsDefaultLanguage,
+      toggleDropdown,
+      selectLanguage,
+      handleLanguageClick,
+      isSelectedLanguage,
+      deleteLanguage,
     }
   },
 })

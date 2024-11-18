@@ -63,3 +63,45 @@ $container-width: 320px;
     }
   }
 }
+
+.selected-languages {
+  &__list {
+    transition: all 0.25s ease-in-out;
+
+    &.blured {
+      pointer-events: none;
+      opacity: 0.5;
+      filter: blur(2px);
+    }
+  }
+
+  &__item {
+    border: 2px solid transparent;
+    border-radius: $default-border-radius;
+    box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: all 0.25s ease-in-out;
+
+    &:hover {
+      box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.25);
+    }
+
+    &.selected {
+      border: 2px solid $border-color-dark;
+    }
+
+    .delete-icon {
+      color: $red-color;
+      z-index: 5;
+
+      &:hover {
+        filter: brightness(0.75);
+      }
+    }
+
+    .default-icon {
+      color: $green-color;
+      z-index: 5;
+    }
+  }
+}
