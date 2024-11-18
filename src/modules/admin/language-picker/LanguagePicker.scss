@@ -66,7 +66,7 @@ $container-width: 320px;
 
 .selected-languages {
   &__list {
-    transition: all 0.25s ease-in-out;
+    transition: all 0.15s ease-in-out;
 
     &.blured {
       pointer-events: none;
@@ -93,9 +93,11 @@ $container-width: 320px;
     .delete-icon {
       color: $red-color;
       z-index: 5;
+      transition: all 0.1s ease-in-out;
 
       &:hover {
         filter: brightness(0.75);
+        transform: scale(0.95);
       }
     }
 

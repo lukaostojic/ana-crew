@@ -11,7 +11,28 @@
   }
 
   &__sidemenu {
-    // width: 400px;
     height: calc(100vh - $header-height);
+  }
+
+  &__tabs {
+    height: 58px;
+    border-bottom: 1px solid $border-color-light;
+  }
+
+  &__tab-item {
+    top: 4px;
+    padding-bottom: 10px;
+    border-bottom: 4px solid transparent;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+
+    &:hover {
+      color: $green-color;
+    }
+
+    &.active {
+      color: $green-color;
+      border-bottom: 4px solid $green-color;
+    }
   }
 }

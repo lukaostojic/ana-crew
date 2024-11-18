@@ -62,6 +62,7 @@ import {
   deleteSelectedLanguage,
 } from '../../../services/localization.service'
 import { languages as allLanguages } from '../../../config/languages'
+import type { Language } from '../../../services/localization.service'
 
 export default defineComponent({
   name: 'CustomLanguageDropdown',
@@ -69,10 +70,10 @@ export default defineComponent({
     const isOpen = ref(false)
     const searchQuery = ref('')
     const dropdown = ref<HTMLElement | null>(null)
-    const availableLanguages = ref([...allLanguages])
-    const selectedLanguages = ref<{ code: string; name: string }[]>([])
-    const defaultLanguage = ref<{ code: string; name: string } | null>(null)
-    const selectedLanguage = ref<{ code: string; name: string } | null>(null)
+    const availableLanguages = ref<Language[]>([...allLanguages])
+    const selectedLanguages = ref<Language[]>([])
+    const defaultLanguage = ref<Language | null>(null)
+    const selectedLanguage = ref<Language | null>(null)
     const isLoading = ref(true)
 
     const fetchLanguages = async () => {
@@ -85,7 +86,7 @@ export default defineComponent({
         selectedLanguages.value = selected
         defaultLanguage.value = defaultLang
         availableLanguages.value = allLanguages.filter(
-          (language) =>
+          (language: Language) =>
             !selected.some((selected) => selected.code === language.code) &&
             language.code !== defaultLang?.code,
         )
@@ -108,15 +109,15 @@ export default defineComponent({
       }
     }
 
-    const handleLanguageClick = (language: { code: string; name: string }) => {
+    const handleLanguageClick = (language: Language) => {
       selectedLanguage.value = language
     }
 
-    const isSelectedLanguage = (language: { code: string; name: string }) => {
+    const isSelectedLanguage = (language: Language) => {
       return selectedLanguage.value?.code === language.code
     }
 
-    const deleteLanguage = async (language: { code: string; name: string }) => {
+    const deleteLanguage = async (language: Language) => {
       try {
         selectedLanguages.value = selectedLanguages.value.filter(
           (selected) => selected.code !== language.code,
@@ -129,7 +130,7 @@ export default defineComponent({
       }
     }
 
-    const selectLanguage = async (language: { code: string; name: string }) => {
+    const selectLanguage = async (language: Language) => {
       if (!selectedLanguages.value.some((lang) => lang.code === language.code)) {
         selectedLanguages.value.push(language)
         availableLanguages.value = availableLanguages.value.filter((l) => l.code !== language.code)
@@ -140,7 +141,7 @@ export default defineComponent({
     }
 
     const filteredLanguages = computed(() =>
-      availableLanguages.value.filter((language) =>
+      availableLanguages.value.filter((language: Language) =>
         language.name.toLowerCase().includes(searchQuery.value.toLowerCase()),
       ),
     )

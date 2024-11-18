@@ -10,17 +10,31 @@
       </button>
     </div>
   </div>
-  <div class="admin__sidemenu">
-    <language-picker />
+  <div class="d-flex">
+    <div class="admin__sidemenu">
+      <language-picker />
+    </div>
+    <div class="admin__tabs d-flex justify-sb align-center w-100 px-4 py-5">
+      <div
+        v-for="(tab, index) in tabs"
+        :key="index"
+        :class="[
+          'admin__tab-item d-flex align-center p-relative px-5 py-3',
+          { active: activeTab === index },
+        ]"
+        @click="setActiveTab(index)"
+      >
+        <span class="text-bold-2 mr-2">{{ tab.label }}</span>
+        <span class="material-symbols-outlined">{{ tab.icon }}</span>
+      </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue'
+import { defineComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../../stores/auth'
-import { db } from '../../config/firebase'
-import { collection, getDocs } from 'firebase/firestore'
 import LanguagePicker from './language-picker/LanguagePicker.vue'
 
 export default defineComponent({
@@ -29,8 +43,17 @@ export default defineComponent({
   setup() {
     const router = useRouter()
     const authStore = useAuthStore()
+    const activeTab = ref(0)
+    const tabs = ref([
+      { label: 'Content', icon: 'description' },
+      { label: 'Video', icon: 'movie' },
+      { label: 'Images', icon: 'image' },
+      { label: 'Artists', icon: 'music_note' },
+    ])
 
-    onMounted(async () => {})
+    const setActiveTab = (index: number) => {
+      activeTab.value = index
+    }
 
     const logout = async () => {
       await authStore.logout()
@@ -42,6 +65,9 @@ export default defineComponent({
     }
 
     return {
+      tabs,
+      activeTab,
+      setActiveTab,
       logout,
       goToWebsite,
     }
