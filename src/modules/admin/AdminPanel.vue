@@ -14,18 +14,23 @@
     <div class="admin__sidemenu">
       <language-picker />
     </div>
-    <div class="admin__tabs d-flex justify-sb align-center w-100 px-4 py-5">
-      <div
-        v-for="(tab, index) in tabs"
-        :key="index"
-        :class="[
-          'admin__tab-item d-flex align-center p-relative px-5 py-3',
-          { active: activeTab === index },
-        ]"
-        @click="setActiveTab(index)"
-      >
-        <span class="text-bold-2 mr-2">{{ tab.label }}</span>
-        <span class="material-symbols-outlined">{{ tab.icon }}</span>
+    <div class="d-flex-col w-100">
+      <div class="admin__tabs d-flex justify-sb align-center w-100 px-4 py-5">
+        <div
+          v-for="(tab, index) in tabs"
+          :key="index"
+          :class="[
+            'admin__tab-item d-flex align-center p-relative px-5 py-3',
+            { active: activeTab === index },
+          ]"
+          @click="setActiveTab(tab, index)"
+        >
+          <span class="text-bold-2 mr-2">{{ tab.label }}</span>
+          <span class="material-symbols-outlined">{{ tab.icon }}</span>
+        </div>
+      </div>
+      <div>
+        <router-view></router-view>
       </div>
     </div>
   </div>
@@ -45,14 +50,15 @@ export default defineComponent({
     const authStore = useAuthStore()
     const activeTab = ref(0)
     const tabs = ref([
-      { label: 'Content', icon: 'description' },
-      { label: 'Video', icon: 'movie' },
-      { label: 'Images', icon: 'image' },
-      { label: 'Artists', icon: 'music_note' },
+      { label: 'Content', icon: 'description', route: '/admin/content' },
+      { label: 'Videos', icon: 'movie', route: '/admin/videos' },
+      { label: 'Images', icon: 'image', route: '/admin/images' },
+      { label: 'Artists', icon: 'music_note', route: '/admin/artists' },
     ])
 
-    const setActiveTab = (index: number) => {
+    const setActiveTab = (tab: any, index: number) => {
       activeTab.value = index
+      router.push(tab.route)
     }
 
     const logout = async () => {

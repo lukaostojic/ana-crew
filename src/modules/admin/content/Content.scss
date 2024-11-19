@@ -1,0 +1,29 @@
+@import '../../../styles/variables';
+
+.content {
+  &__wrapper {
+    margin-top: 36px;
+
+    .inner {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(560px, 1fr));
+      gap: 16px;
+    }
+  }
+
+  &__section {
+    background-color: $primary-theme-color3;
+    border-radius: $default-border-radius;
+    // box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.2);
+  }
+
+  &__item {
+    .label {
+      width: 160px;
+    }
+
+    textarea {
+      resize: none;
+    }
+  }
+}

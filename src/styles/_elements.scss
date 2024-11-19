@@ -32,3 +32,10 @@
   border: 1px solid $border-color-light;
   border-radius: $default-border-radius;
 }
+
+.textarea {
+  border: 1px solid $border-color-light;
+  border-radius: $default-border-radius;
+  padding: 4px 8px;
+  font-family: inherit;
+}

@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { AdminRoutes } from '@/modules/admin/router'
 
 const routes = [
   {
@@ -14,6 +15,8 @@ const routes = [
   {
     path: '/admin',
     component: () => import('@/modules/admin/AdminPanel.vue'),
+    children: AdminRoutes,
+    redirect: '/admin/content',
     meta: { requiresAuth: true },
   },
 ]
