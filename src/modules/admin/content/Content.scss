@@ -6,7 +6,7 @@
 
     .inner {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(560px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
       gap: 16px;
     }
   }
@@ -14,12 +14,17 @@
   &__section {
     background-color: $primary-theme-color3;
     border-radius: $default-border-radius;
-    // box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.2);
+    border-left: 4px solid $primary-theme-color1;
+    box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.15);
+
+    .navigation {
+      gap: 16px;
+    }
   }
 
   &__item {
-    .label {
-      width: 160px;
+    &.navigation-item {
+      width: 50%;
     }
 
     textarea {

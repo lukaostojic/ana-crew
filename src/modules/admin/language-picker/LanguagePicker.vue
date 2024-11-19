@@ -61,12 +61,14 @@ import {
   updateSelectedLanguages,
   deleteSelectedLanguage,
 } from '../../../services/localization.service'
+import { useLocalizationStore } from '../../../stores/localization'
 import { languages as allLanguages } from '../../../config/languages'
 import type { Language } from '../../../services/localization.service'
 
 export default defineComponent({
   name: 'CustomLanguageDropdown',
   setup() {
+    const localizationStore = useLocalizationStore()
     const isOpen = ref(false)
     const searchQuery = ref('')
     const dropdown = ref<HTMLElement | null>(null)
@@ -111,6 +113,7 @@ export default defineComponent({
 
     const handleLanguageClick = (language: Language) => {
       selectedLanguage.value = language
+      localizationStore.setLanguage(language)
     }
 
     const isSelectedLanguage = (language: Language) => {
@@ -137,6 +140,7 @@ export default defineComponent({
         await updateSelectedLanguages(selectedLanguages.value)
         isOpen.value = false
         searchQuery.value = ''
+        localizationStore.addLanguageContent(language.code)
       }
     }
 
