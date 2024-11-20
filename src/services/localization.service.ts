@@ -1,5 +1,5 @@
 import { db } from '../config/firebase'
-import { getDoc, setDoc, updateDoc, doc } from 'firebase/firestore'
+import { getDoc, setDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore'
 
 export const fetchLocalizationContent = async (
   languageCode: string,
@@ -34,4 +34,16 @@ export const addNewLanguageContent = async (languageCode: string): Promise<void>
     NAVIGATION_IMAGES: '',
     NAVIGATION_ARTISTS: '',
   })
+}
+
+export const deleteLanguageContent = async (languageCode: string): Promise<void> => {
+  const langDocRef = doc(db, 'content', languageCode)
+
+  try {
+    await deleteDoc(langDocRef)
+    console.log(`Content for language '${languageCode}' has been deleted.`)
+  } catch (error) {
+    console.error(`Failed to delete content for language '${languageCode}':`, error)
+    throw new Error(`Failed to delete content for language '${languageCode}'.`)
+  }
 }

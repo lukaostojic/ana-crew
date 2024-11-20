@@ -128,6 +128,7 @@ export default defineComponent({
 
         availableLanguages.value.push(language)
         await deleteSelectedLanguage(language)
+        localizationStore.removeLanguageContent()
       } catch (error) {
         console.error('Error deleting language:', error)
       }
