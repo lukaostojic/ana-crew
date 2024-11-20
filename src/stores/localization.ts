@@ -5,12 +5,13 @@ import {
   updateLocalizationContent,
   addNewLanguageContent,
 } from '../services/localization.service'
+import type { Language } from '@/services/language.service'
 
 export const useLocalizationStore = defineStore('localization', () => {
-  const selectedLanguage = ref<{ code: string; name: string } | null>(null)
+  const selectedLanguage = ref<Language>({ code: 'en', name: 'English' })
   const content = reactive<Record<string, string>>({})
 
-  const setLanguage = (language: { code: string; name: string }) => {
+  const setLanguage = (language: Language) => {
     selectedLanguage.value = language
   }
 

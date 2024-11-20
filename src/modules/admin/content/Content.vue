@@ -37,8 +37,8 @@
           </div>
         </div>
       </div>
-      <button @click="saveContent()">Save</button>
     </div>
+    <button @click="saveContent()">Save</button>
   </div>
 </template>
 
@@ -58,6 +58,8 @@ export default defineComponent({
       navigation: [
         { label: 'Home', value: '' },
         { label: 'Videos', value: '' },
+        { label: 'Images', value: '' },
+        { label: 'Artists', value: '' },
       ],
     })
 
@@ -76,6 +78,8 @@ export default defineComponent({
         contentData.value.header.aboutUs = newContent.HEADER_ABOUT_US || ''
         contentData.value.navigation[0].value = newContent.NAVIGATION_HOME || ''
         contentData.value.navigation[1].value = newContent.NAVIGATION_VIDEOS || ''
+        contentData.value.navigation[2].value = newContent.NAVIGATION_IMAGES || ''
+        contentData.value.navigation[3].value = newContent.NAVIGATION_ARTISTS || ''
       },
       { deep: true, immediate: true },
     )

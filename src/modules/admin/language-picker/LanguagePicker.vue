@@ -60,10 +60,10 @@ import {
   fetchDefaultLanguage,
   updateSelectedLanguages,
   deleteSelectedLanguage,
-} from '../../../services/localization.service'
+} from '../../../services/language.service'
 import { useLocalizationStore } from '../../../stores/localization'
 import { languages as allLanguages } from '../../../config/languages'
-import type { Language } from '../../../services/localization.service'
+import type { Language } from '../../../services/language.service'
 
 export default defineComponent({
   name: 'CustomLanguageDropdown',
