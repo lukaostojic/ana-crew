@@ -10,7 +10,7 @@ import type { Language } from '@/services/language.service'
 
 export const useLocalizationStore = defineStore('localization', () => {
   const selectedLanguage = ref<Language | null>({ code: 'en', name: 'English' })
-  const content = reactive<Record<string, string>>({})
+  const content = ref<Record<string, string>>({})
 
   const setLanguage = (language: Language) => {
     selectedLanguage.value = language
@@ -19,13 +19,13 @@ export const useLocalizationStore = defineStore('localization', () => {
   const loadLocalizationContent = async () => {
     if (selectedLanguage.value?.code) {
       const data = await fetchLocalizationContent(selectedLanguage.value.code)
-      Object.assign(content, data)
+      Object.assign(content.value, data)
     }
   }
 
   const saveLocalizationContent = async () => {
     if (selectedLanguage.value) {
-      await updateLocalizationContent(selectedLanguage.value.code, { ...content })
+      await updateLocalizationContent(selectedLanguage.value.code, { ...content.value })
     }
   }
 
@@ -38,7 +38,7 @@ export const useLocalizationStore = defineStore('localization', () => {
       await deleteLanguageContent(selectedLanguage.value.code)
       console.log(`Content for ${selectedLanguage.value.name} deleted.`)
       selectedLanguage.value = null
-      Object.assign(content, {})
+      Object.assign(content.value, {})
     }
   }
 

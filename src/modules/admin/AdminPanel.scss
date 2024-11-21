@@ -14,6 +14,23 @@
     height: calc(100vh - $header-height);
   }
 
+  &__save-button {
+    top: 8px;
+    height: 106px;
+
+    button {
+      width: 160px;
+      height: 36px;
+      z-index: 5;
+    }
+
+    .language {
+      background-color: $green-color;
+      color: $white-color;
+      border-radius: $default-border-radius;
+    }
+  }
+
   &__tabs {
     height: 58px;
     border-bottom: 1px solid $border-color-light;

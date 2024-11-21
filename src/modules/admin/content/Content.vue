@@ -1,30 +1,30 @@
 <template>
-  <div class="content__wrapper p-4">
-    <div class="inner">
+  <div class="content__wrapper px-4">
+    <div class="inner" v-if="contentData">
       <!-- Header Section -->
-      <div class="content__section p-4">
+      <div class="content__section p-4 mb-5">
         <h2 class="mb-6">Header</h2>
         <div class="content__item d-flex-col justify-sb mb-6">
           <div class="label mb-1">Heading</div>
           <textarea
             class="textarea"
-            cols=""
             rows="1"
             v-model="contentData.header.heading"
+            @input="updateContent('HEADER_HEADING', contentData.header.heading)"
           ></textarea>
         </div>
         <div class="content__item d-flex-col justify-sb mb-3">
           <div class="label mb-1">About Us</div>
           <textarea
             class="textarea"
-            cols=""
             rows="8"
             v-model="contentData.header.aboutUs"
+            @input="updateContent('HEADER_ABOUT_US', contentData.header.aboutUs)"
           ></textarea>
         </div>
       </div>
       <!-- Navigation Section -->
-      <div class="content__section p-4">
+      <div class="content__section p-4 mb-5">
         <h2 class="mb-6">Navigation</h2>
         <div class="d-flex navigation">
           <div
@@ -33,68 +33,63 @@
             :key="index"
           >
             <div class="label mb-1">{{ item.label }}</div>
-            <textarea class="textarea" cols="" rows="1" v-model="item.value"></textarea>
+            <textarea
+              class="textarea"
+              rows="1"
+              v-model="item.value"
+              @input="updateContent(`NAVIGATION_${item.label.toUpperCase()}`, item.value)"
+            ></textarea>
           </div>
         </div>
       </div>
     </div>
-    <button @click="saveContent()">Save</button>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, watch } from 'vue'
-import { useLocalizationStore } from '../../../stores/localization'
+import type { Content } from '../../../types/content'
 
 export default defineComponent({
-  setup() {
-    const localizationStore = useLocalizationStore()
+  name: 'Content',
+  props: {
+    content: Object,
+    language: Object,
+  },
+  emits: ['update-content'],
+  setup(props, { emit }) {
+    const contentData = ref<Content>()
 
-    const contentData = ref({
-      header: {
-        heading: '',
-        aboutUs: '',
-      },
-      navigation: [
-        { label: 'Home', value: '' },
-        { label: 'Videos', value: '' },
-        { label: 'Images', value: '' },
-        { label: 'Artists', value: '' },
-      ],
-    })
-
-    const fetchContent = async () => {
-      await localizationStore.loadLocalizationContent()
+    const mapContent = (newContent) => {
+      contentData.value = {
+        header: {
+          heading: newContent?.HEADER_HEADING || '',
+          aboutUs: newContent?.HEADER_ABOUT_US || '',
+        },
+        navigation: [
+          { label: 'Home', value: newContent?.NAVIGATION_HOME || '' },
+          { label: 'Videos', value: newContent?.NAVIGATION_VIDEOS || '' },
+          { label: 'Images', value: newContent?.NAVIGATION_IMAGES || '' },
+          { label: 'Artists', value: newContent?.NAVIGATION_ARTISTS || '' },
+        ],
+      }
     }
 
-    const saveContent = async () => {
-      await localizationStore.saveLocalizationContent()
+    const updateContent = (field: string, value: any) => {
+      emit('update-content', { [field]: value })
     }
 
     watch(
-      () => localizationStore.content,
+      () => props.content,
       (newContent) => {
-        contentData.value.header.heading = newContent.HEADER_HEADING || ''
-        contentData.value.header.aboutUs = newContent.HEADER_ABOUT_US || ''
-        contentData.value.navigation[0].value = newContent.NAVIGATION_HOME || ''
-        contentData.value.navigation[1].value = newContent.NAVIGATION_VIDEOS || ''
-        contentData.value.navigation[2].value = newContent.NAVIGATION_IMAGES || ''
-        contentData.value.navigation[3].value = newContent.NAVIGATION_ARTISTS || ''
+        mapContent(newContent)
       },
-      { deep: true, immediate: true },
-    )
-
-    watch(
-      () => localizationStore.selectedLanguage,
-      () => {
-        fetchContent()
-      },
-      { deep: true, immediate: true },
+      { immediate: true, deep: true },
     )
 
     return {
       contentData,
-      saveContent,
+      updateContent,
     }
   },
 })

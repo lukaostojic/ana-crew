@@ -2,11 +2,9 @@
 
 .content {
   &__wrapper {
-    margin-top: 36px;
-
     .inner {
-      display: grid;
-      gap: 16px;
+      height: calc(100vh - 232px);
+      overflow: auto;
     }
   }
 

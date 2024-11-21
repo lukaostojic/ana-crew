@@ -29,25 +29,46 @@
           <span class="material-symbols-outlined">{{ tab.icon }}</span>
         </div>
       </div>
-      <div>
-        <router-view></router-view>
+      <div class="admin__save-button d-flex justify-sb align-center p-relative px-4">
+        <div v-if="language">
+          Editing content for:
+          <span class="language ml-1 px-2 py-1 text-bold-1">{{ language.name }}</span>
+        </div>
+        <button class="button button--primary button--icon p-relative" @click="saveContent()">
+          <span>Save</span>
+          <span class="material-symbols-outlined"> save </span>
+        </button>
       </div>
+      <router-view v-slot="{ Component }">
+        <keep-alive>
+          <component
+            :is="Component"
+            :content="content"
+            :language="language"
+            @update-content="updateContent"
+          />
+        </keep-alive>
+      </router-view>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../../stores/auth'
+import { useLocalizationStore } from '../../stores/localization'
 import LanguagePicker from './language-picker/LanguagePicker.vue'
 
 export default defineComponent({
   components: { LanguagePicker },
-  name: 'AdminPanel',
+  name: 'Admin Panel',
   setup() {
     const router = useRouter()
-    const authStore = useAuthStore()
+    const authAuthStore = useAuthStore()
+    const localizationStore = useLocalizationStore()
+    const language = ref()
+    const content = ref()
     const activeTab = ref(0)
     const tabs = ref([
       { label: 'Content', icon: 'description', route: '/admin/content' },
@@ -62,7 +83,7 @@ export default defineComponent({
     }
 
     const logout = async () => {
-      await authStore.logout()
+      await authAuthStore.logout()
       router.push('/auth')
     }
 
@@ -70,12 +91,42 @@ export default defineComponent({
       router.push('/')
     }
 
+    const fetchContent = async () => {
+      await localizationStore.loadLocalizationContent()
+      content.value = { ...localizationStore.content }
+    }
+
+    const updateContent = (updatedContent: any) => {
+      content.value = {
+        ...content.value,
+        ...updatedContent,
+      }
+    }
+
+    const saveContent = async () => {
+      localizationStore.content = { ...content.value }
+      await localizationStore.saveLocalizationContent()
+    }
+
+    watch(
+      () => localizationStore.selectedLanguage,
+      () => {
+        fetchContent()
+        language.value = localizationStore.selectedLanguage
+      },
+      { deep: true, immediate: true },
+    )
+
     return {
       tabs,
       activeTab,
+      language,
+      content,
       setActiveTab,
       logout,
       goToWebsite,
+      updateContent,
+      saveContent,
     }
   },
 })
