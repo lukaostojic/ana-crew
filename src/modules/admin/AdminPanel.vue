@@ -34,7 +34,12 @@
           Editing content for:
           <span class="language ml-1 px-2 py-1 text-bold-1">{{ language.name }}</span>
         </div>
-        <button class="button button--primary button--icon p-relative" @click="saveContent()">
+        <button
+          :disabled="isSaveButtonDisabled"
+          :class="{ disabled: isSaveButtonDisabled }"
+          class="button button--primary button--icon p-relative"
+          @click="saveContent()"
+        >
           <span>Save</span>
           <span class="material-symbols-outlined"> save </span>
         </button>
@@ -65,10 +70,12 @@ export default defineComponent({
   name: 'Admin Panel',
   setup() {
     const router = useRouter()
-    const authAuthStore = useAuthStore()
+    const authStore = useAuthStore()
     const localizationStore = useLocalizationStore()
     const language = ref()
     const content = ref()
+    const contentCopy = ref(Object.freeze({}))
+    const isSaveButtonDisabled = ref(true)
     const activeTab = ref(0)
     const tabs = ref([
       { label: 'Content', icon: 'description', route: '/admin/content' },
@@ -83,7 +90,7 @@ export default defineComponent({
     }
 
     const logout = async () => {
-      await authAuthStore.logout()
+      await authStore.logout()
       router.push('/auth')
     }
 
@@ -94,6 +101,11 @@ export default defineComponent({
     const fetchContent = async () => {
       await localizationStore.loadLocalizationContent()
       content.value = { ...localizationStore.content }
+      contentCopy.value = Object.freeze(JSON.parse(JSON.stringify(content.value)))
+    }
+
+    const deepEqual = (obj1: any, obj2: any): boolean => {
+      return JSON.stringify(obj1) === JSON.stringify(obj2)
     }
 
     const updateContent = (updatedContent: any) => {
@@ -101,6 +113,7 @@ export default defineComponent({
         ...content.value,
         ...updatedContent,
       }
+      isSaveButtonDisabled.value = deepEqual(content.value, contentCopy.value)
     }
 
     const saveContent = async () => {
@@ -122,6 +135,7 @@ export default defineComponent({
       activeTab,
       language,
       content,
+      isSaveButtonDisabled,
       setActiveTab,
       logout,
       goToWebsite,

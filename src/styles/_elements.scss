@@ -6,6 +6,12 @@
   cursor: pointer;
   transition: all 0.25s ease-in-out;
 
+  &.disabled {
+    opacity: 0.4;
+    cursor: auto;
+    filter: brightness(1) !important;
+  }
+
   &--icon {
     display: flex;
     justify-content: center;

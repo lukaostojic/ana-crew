@@ -90,14 +90,42 @@ $container-width: 320px;
       border: 2px solid $border-color-dark;
     }
 
+    .language-label {
+      width: 240px;
+    }
+
     .delete-icon {
+      position: relative;
       color: $red-color;
       z-index: 5;
       transition: all 0.1s ease-in-out;
 
+      &:after {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        width: 30px;
+        height: 30px;
+        background-color: $red-color;
+        opacity: 0.15;
+        border-radius: 50%;
+        transform: scale(0);
+        transition: all 0.15s ease-in-out;
+      }
+
+      &.disabled {
+        opacity: 0.4;
+        pointer-events: none;
+      }
+
       &:hover {
-        filter: brightness(0.75);
-        transform: scale(0.95);
+        filter: brightness(0.8);
+
+        &:after {
+          transform: scale(1);
+        }
       }
     }
 

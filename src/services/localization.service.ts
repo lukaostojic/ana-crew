@@ -21,6 +21,7 @@ export const updateLocalizationContent = async (
   const langDocRef = doc(db, 'content', languageCode)
 
   await updateDoc(langDocRef, content)
+  console.log(`Content for language '${languageCode}' has been updated.`)
 }
 
 export const addNewLanguageContent = async (languageCode: string): Promise<void> => {
@@ -34,6 +35,7 @@ export const addNewLanguageContent = async (languageCode: string): Promise<void>
     NAVIGATION_IMAGES: '',
     NAVIGATION_ARTISTS: '',
   })
+  console.log(`Content for language '${languageCode}' has been added.`)
 }
 
 export const deleteLanguageContent = async (languageCode: string): Promise<void> => {

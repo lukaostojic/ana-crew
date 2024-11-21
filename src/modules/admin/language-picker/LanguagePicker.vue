@@ -34,14 +34,20 @@
           <span class="material-symbols-outlined default-icon"> lock </span>
         </li>
         <li
-          class="selected-languages__item d-flex align-center justify-sb p-2 mb-2"
+          class="selected-languages__item d-flex align-center justify-sb mb-2"
           v-for="language in selectedLanguages"
           :key="language.code"
           :class="{ selected: isSelectedLanguage(language) }"
-          @click="handleLanguageClick(language)"
         >
-          <span>{{ language.name }}</span>
-          <span class="material-symbols-outlined delete-icon" @click="deleteLanguage(language)">
+          <span class="language-label p-2" @click="handleLanguageClick(language)">{{
+            language.name
+          }}</span>
+          <span
+            class="material-symbols-outlined delete-icon p-2"
+            :disabled="selectedLanguage === language"
+            :class="{ disabled: selectedLanguage === language }"
+            @click="deleteLanguage(language)"
+          >
             delete
           </span>
         </li>
@@ -128,7 +134,7 @@ export default defineComponent({
 
         availableLanguages.value.push(language)
         await deleteSelectedLanguage(language)
-        localizationStore.removeLanguageContent()
+        localizationStore.removeLanguageContent(language)
       } catch (error) {
         console.error('Error deleting language:', error)
       }
@@ -168,6 +174,7 @@ export default defineComponent({
       defaultLanguage,
       dropdown,
       isLoading,
+      selectedLanguage,
       toggleDropdown,
       selectLanguage,
       handleLanguageClick,

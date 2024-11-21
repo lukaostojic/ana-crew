@@ -33,10 +33,9 @@ export const useLocalizationStore = defineStore('localization', () => {
     await addNewLanguageContent(languageCode)
   }
 
-  const removeLanguageContent = async () => {
-    if (selectedLanguage.value?.code) {
-      await deleteLanguageContent(selectedLanguage.value.code)
-      console.log(`Content for ${selectedLanguage.value.name} deleted.`)
+  const removeLanguageContent = async (language: Language) => {
+    if (language.code) {
+      await deleteLanguageContent(language.code)
       selectedLanguage.value = null
       Object.assign(content.value, {})
     }
