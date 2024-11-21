@@ -1,0 +1,24 @@
+@import '../../../../styles/variables';
+
+.video-item {
+  &__wrapper {
+    background-color: $primary-theme-color3;
+    border-radius: $default-border-radius;
+    border-left: 4px solid $primary-theme-color1;
+    box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.15);
+  }
+
+  &__url {
+    border-bottom: 1px solid $border-color-light;
+  }
+
+  &__actions {
+    top: 2px;
+    justify-content: flex-end;
+    align-items: flex-end;
+
+    button {
+      width: 100px;
+    }
+  }
+}

@@ -1,0 +1,32 @@
+@import '../../../styles/variables';
+
+.videos {
+  &__add-button {
+    button.add {
+      right: 168px;
+      bottom: 27px;
+      width: 160px;
+    }
+  }
+
+  &__no-videos {
+    height: calc(100vh - 232px);
+
+    .no-video {
+      font-size: 60px;
+    }
+  }
+
+  &__list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    align-content: start;
+    gap: 20px;
+    height: calc(100vh - 232px);
+    overflow-y: auto;
+  }
+
+  // &__item {
+  // flex: 1 1 auto;
+  // }
+}

@@ -28,6 +28,15 @@
     color: $secondary-text-color;
   }
 
+  &--secondary {
+    background-color: $secondary-button-color;
+  }
+
+  &--danger {
+    background-color: $red-color;
+    color: $white-color;
+  }
+
   &:hover {
     filter: brightness(1.5);
   }
@@ -44,4 +53,5 @@
   border-radius: $default-border-radius;
   padding: 4px 8px;
   font-family: inherit;
+  resize: none;
 }

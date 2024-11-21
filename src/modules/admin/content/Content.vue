@@ -3,8 +3,8 @@
     <div class="inner" v-if="contentData">
       <!-- Header Section -->
       <div class="content__section p-4 mb-5">
-        <h2 class="mb-6">Header</h2>
-        <div class="content__item d-flex-col justify-sb mb-6">
+        <h2 class="mb-5">Header</h2>
+        <div class="content__item d-flex-col justify-sb mb-4">
           <div class="label mb-1">Heading</div>
           <textarea
             class="textarea"
@@ -25,7 +25,7 @@
       </div>
       <!-- Navigation Section -->
       <div class="content__section p-4 mb-5">
-        <h2 class="mb-6">Navigation</h2>
+        <h2 class="mb-5">Navigation</h2>
         <div class="d-flex navigation">
           <div
             class="content__item navigation-item d-flex-col justify-sb mb-3"

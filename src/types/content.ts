@@ -11,3 +11,9 @@ export type Content = {
     { label: string; value: string },
   ]
 }
+
+export type Video = {
+  heading: ''
+  description: ''
+  url: ''
+}
