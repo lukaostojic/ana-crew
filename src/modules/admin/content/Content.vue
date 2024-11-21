@@ -54,7 +54,6 @@ export default defineComponent({
   name: 'Content',
   props: {
     content: Object,
-    language: Object,
   },
   emits: ['update-content'],
   setup(props, { emit }) {
@@ -71,6 +70,7 @@ export default defineComponent({
           { label: 'Videos', value: newContent?.NAVIGATION_VIDEOS || '' },
           { label: 'Images', value: newContent?.NAVIGATION_IMAGES || '' },
           { label: 'Artists', value: newContent?.NAVIGATION_ARTISTS || '' },
+          { label: 'Contact', value: newContent?.NAVIGATION_CONTACT || '' },
         ],
       }
     }

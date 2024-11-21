@@ -73,7 +73,8 @@ import type { Language } from '../../../services/language.service'
 
 export default defineComponent({
   name: 'CustomLanguageDropdown',
-  setup() {
+  emits: ['disable-save'],
+  setup(_, { emit }) {
     const localizationStore = useLocalizationStore()
     const isOpen = ref(false)
     const searchQuery = ref('')
@@ -120,6 +121,7 @@ export default defineComponent({
     const handleLanguageClick = (language: Language) => {
       selectedLanguage.value = language
       localizationStore.setLanguage(language)
+      emit('disable-save', true)
     }
 
     const isSelectedLanguage = (language: Language) => {

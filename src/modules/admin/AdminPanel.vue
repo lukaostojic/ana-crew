@@ -12,7 +12,7 @@
   </div>
   <div class="d-flex">
     <div class="admin__sidemenu">
-      <language-picker />
+      <language-picker @disable-save="onDisableSave" />
     </div>
     <div class="d-flex-col w-100">
       <div class="admin__tabs d-flex justify-sb align-center w-100 px-4 py-5">
@@ -46,12 +46,7 @@
       </div>
       <router-view v-slot="{ Component }">
         <keep-alive>
-          <component
-            :is="Component"
-            :content="content"
-            :language="language"
-            @update-content="updateContent"
-          />
+          <component :is="Component" :content="content" @update-content="updateContent" />
         </keep-alive>
       </router-view>
     </div>
@@ -75,6 +70,7 @@ export default defineComponent({
     const language = ref()
     const content = ref()
     const contentCopy = ref(Object.freeze({}))
+    const isLoading = ref(false)
     const isSaveButtonDisabled = ref(true)
     const activeTab = ref(0)
     const tabs = ref([
@@ -119,6 +115,12 @@ export default defineComponent({
     const saveContent = async () => {
       localizationStore.content = { ...content.value }
       await localizationStore.saveLocalizationContent()
+      contentCopy.value = Object.freeze(JSON.parse(JSON.stringify(content.value)))
+      isSaveButtonDisabled.value = true
+    }
+
+    const onDisableSave = (value: boolean) => {
+      isSaveButtonDisabled.value = value
     }
 
     watch(
@@ -141,6 +143,7 @@ export default defineComponent({
       goToWebsite,
       updateContent,
       saveContent,
+      onDisableSave,
     }
   },
 })

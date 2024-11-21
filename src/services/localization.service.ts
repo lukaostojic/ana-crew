@@ -34,6 +34,7 @@ export const addNewLanguageContent = async (languageCode: string): Promise<void>
     NAVIGATION_VIDEOS: '',
     NAVIGATION_IMAGES: '',
     NAVIGATION_ARTISTS: '',
+    NAVIGATION_CONTACT: '',
   })
   console.log(`Content for language '${languageCode}' has been added.`)
 }
