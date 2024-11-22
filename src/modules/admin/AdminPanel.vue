@@ -49,6 +49,9 @@
       </router-view>
     </div>
   </div>
+  <!-- <div class="modal p-absolute w-100 h-100">
+    <modal />
+  </div> -->
 </template>
 
 <script lang="ts">
@@ -57,9 +60,10 @@ import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '../../stores/auth'
 import { useLocalizationStore } from '../../stores/localization'
 import LanguagePicker from './language-picker/LanguagePicker.vue'
+import Modal from './shared/modal/Modal.vue'
 
 export default defineComponent({
-  components: { LanguagePicker },
+  components: { LanguagePicker, Modal },
   name: 'Admin Panel',
   setup() {
     const router = useRouter()
@@ -170,7 +174,6 @@ export default defineComponent({
   },
 })
 
-// When adding a new language, videos get updated with the previously selected language data
 // When changing url in one language, video data gets deleted in all other languages (url is updated properly)
 // When removing a language, 'editing content for:' disappears
 // Delete videos from db
