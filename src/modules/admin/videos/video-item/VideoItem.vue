@@ -1,5 +1,7 @@
 <template>
   <div class="video-item__wrapper d-flex-col p-4">
+    <h2 v-if="videoDataCopy.heading.length" class="mb-5">{{ videoDataCopy.heading }}</h2>
+    <h2 v-else class="mb-5">Title</h2>
     <div class="video-item__url d-flex justify-sb pb-4 mb-4">
       <div class="d-flex-col w-100 mr-4">
         <label class="mb-1">Video URL</label>
@@ -25,16 +27,12 @@
 
 <script lang="ts">
 import { defineComponent, ref, watch } from 'vue'
-import type { PropType } from 'vue'
-import type { Video } from '../../../..//types/content'
 
 export default defineComponent({
   props: {
-    videoData: {
-      type: Object as PropType<Video>,
-      required: true,
-    },
+    videoData: Object,
   },
+  emits: ['update-video', 'remove-video'],
   setup(props, { emit }) {
     const videoDataCopy = ref({ ...props.videoData })
 

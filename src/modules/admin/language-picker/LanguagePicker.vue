@@ -99,6 +99,13 @@ export default defineComponent({
             !selected.some((selected) => selected.code === language.code) &&
             language.code !== defaultLang?.code,
         )
+        if (selectedLanguages.value && defaultLanguage.value) {
+          localizationStore.setAvailableLanguages([
+            ...selectedLanguages.value,
+            defaultLanguage.value,
+          ])
+        }
+        // localizationStore.setAvailableLanguages(selectedLanguages.value)
         selectedLanguage.value = defaultLanguage.value
       } catch (error) {
         console.error('Error fetching languages:', error)

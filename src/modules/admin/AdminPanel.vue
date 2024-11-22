@@ -76,7 +76,7 @@ export default defineComponent({
     const tabs = ref([
       { label: 'Content', icon: 'description', route: '/admin/content' },
       { label: 'Videos', icon: 'movie', route: '/admin/videos' },
-      { label: 'Images', icon: 'image', route: '/admin/images' },
+      { label: 'Photo Galleries', icon: 'photo_library', route: '/admin/galleries' },
       { label: 'Artists', icon: 'music_note', route: '/admin/artists' },
     ])
 
@@ -113,8 +113,22 @@ export default defineComponent({
     }
 
     const saveContent = async () => {
-      localizationStore.content = { ...content.value }
+      const currentLanguage = localizationStore.selectedLanguage?.code
+
+      localizationStore.content = {
+        ...content.value,
+        videos: Array.isArray(content.value.videos) ? content.value.videos : [],
+      }
+
+      localizationStore.videoContent = (
+        Array.isArray(content.value.videos) ? content.value.videos : []
+      ).map((video) => video.url)
+
       await localizationStore.saveLocalizationContent()
+      if (currentLanguage) {
+        await localizationStore.saveVideoContent(currentLanguage)
+      }
+
       contentCopy.value = Object.freeze(JSON.parse(JSON.stringify(content.value)))
       isSaveButtonDisabled.value = true
     }

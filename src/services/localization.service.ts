@@ -1,5 +1,6 @@
 import { db } from '../config/firebase'
 import { getDoc, setDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore'
+import { generateEmptyContent } from '../config/content-placeholders'
 
 export const fetchLocalizationContent = async (
   languageCode: string,
@@ -16,7 +17,7 @@ export const fetchLocalizationContent = async (
 
 export const updateLocalizationContent = async (
   languageCode: string,
-  content: Record<string, string>,
+  content: any,
 ): Promise<void> => {
   const langDocRef = doc(db, 'content', languageCode)
 
@@ -27,15 +28,7 @@ export const updateLocalizationContent = async (
 export const addNewLanguageContent = async (languageCode: string): Promise<void> => {
   const langDocRef = doc(db, 'content', languageCode)
 
-  await setDoc(langDocRef, {
-    HEADER_HEADING: '',
-    HEADER_ABOUT_US: '',
-    NAVIGATION_HOME: '',
-    NAVIGATION_VIDEOS: '',
-    NAVIGATION_IMAGES: '',
-    NAVIGATION_ARTISTS: '',
-    NAVIGATION_CONTACT: '',
-  })
+  await setDoc(langDocRef, generateEmptyContent())
   console.log(`Content for language '${languageCode}' has been added.`)
 }
 

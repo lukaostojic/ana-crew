@@ -72,6 +72,13 @@ export default defineComponent({
           { label: 'Artists', value: newContent?.NAVIGATION_ARTISTS || '' },
           { label: 'Contact', value: newContent?.NAVIGATION_CONTACT || '' },
         ],
+        videos: Array.isArray(newContent?.videos)
+          ? newContent.videos.map((video) => ({
+              heading: video.heading || '',
+              url: video.url || '',
+              description: video.description || '',
+            }))
+          : [],
       }
     }
 

@@ -10,6 +10,7 @@ export type Content = {
     { label: string; value: string },
     { label: string; value: string },
   ]
+  videos: []
 }
 
 export type Video = {

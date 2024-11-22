@@ -2,7 +2,7 @@
   <div class="videos__wrapper px-4">
     <div class="videos__add-button d-flex justify-end align-center p-relative">
       <button @click="addNewVideo" class="button button--primary button--icon p-absolute add">
-        <span>Add</span>
+        <span>Add Video</span>
         <span class="material-symbols-outlined"> add </span>
       </button>
     </div>
@@ -13,7 +13,7 @@
       </div>
     </div>
     <div v-else class="videos__list pb-5">
-      <div v-for="(video, index) in videos" :key="index" class="videos__item">
+      <div v-for="(video, index) in videos" :key="index">
         <VideoItem
           :videoData="video"
           @update-video="updateVideo(index, $event)"
@@ -25,25 +25,32 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, computed } from 'vue'
 import VideoItem from './video-item/VideoItem.vue'
-import type { Video } from '../../../types/content'
 
 export default defineComponent({
   components: { VideoItem },
-  setup() {
-    const videos = ref<Video[]>([])
+  props: {
+    content: Object,
+  },
+  emits: ['update-content'],
+  setup(props, { emit }) {
+    const videos = computed(() => props.content?.videos || [])
 
     const addNewVideo = () => {
-      videos.value.push({ heading: '', description: '', url: '' })
+      const newVideos = [...videos.value, { heading: '', description: '', url: '' }]
+      emit('update-content', { videos: newVideos })
     }
 
-    const updateVideo = (index: number, updatedData: Video) => {
-      videos.value[index] = updatedData
+    const updateVideo = (index: number, updatedData: any) => {
+      const newVideos = [...videos.value]
+      newVideos[index] = updatedData
+      emit('update-content', { videos: newVideos })
     }
 
     const removeVideo = (index: number) => {
-      videos.value.splice(index, 1)
+      const newVideos = videos.value.filter((_, i) => i !== index)
+      emit('update-content', { videos: newVideos })
     }
 
     return {

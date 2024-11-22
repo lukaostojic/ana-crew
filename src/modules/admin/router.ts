@@ -3,6 +3,7 @@ import Content from './content/Content.vue'
 import Videos from './videos/Videos.vue'
 import Images from './images/Images.vue'
 import Artists from './artists/Artists.vue'
+import PhotoGalleries from './photo-galleries/PhotoGalleries.vue'
 
 export const AdminRoutes: Array<RouteRecordRaw> = [
   {
@@ -24,5 +25,10 @@ export const AdminRoutes: Array<RouteRecordRaw> = [
     path: '/admin/artists',
     name: 'artists',
     component: Artists,
+  },
+  {
+    path: '/admin/galleries',
+    name: 'galleries',
+    component: PhotoGalleries,
   },
 ]
