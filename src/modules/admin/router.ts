@@ -8,12 +8,12 @@ import PhotoGalleries from './photo-galleries/PhotoGalleries.vue'
 export const AdminRoutes: Array<RouteRecordRaw> = [
   {
     path: '/admin/content',
-    name: 'content',
+    name: 'Content',
     component: Content,
   },
   {
     path: '/admin/videos',
-    name: 'videos',
+    name: 'Videos',
     component: Videos,
   },
   {
@@ -23,12 +23,12 @@ export const AdminRoutes: Array<RouteRecordRaw> = [
   },
   {
     path: '/admin/artists',
-    name: 'artists',
+    name: 'Artists',
     component: Artists,
   },
   {
     path: '/admin/galleries',
-    name: 'galleries',
+    name: 'Photo Galleries',
     component: PhotoGalleries,
   },
 ]

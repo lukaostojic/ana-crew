@@ -19,11 +19,9 @@
         <div
           v-for="(tab, index) in tabs"
           :key="index"
-          :class="[
-            'admin__tab-item d-flex align-center p-relative px-5 py-3',
-            { active: activeTab === index },
-          ]"
-          @click="setActiveTab(tab, index)"
+          :class="['tab', { active: isSelected(tab.label) }]"
+          @click="navigateTo(tab.route)"
+          class="admin__tab-item d-flex align-center p-relative px-5 py-3"
         >
           <span class="text-bold-2 mr-2">{{ tab.label }}</span>
           <span class="material-symbols-outlined">{{ tab.icon }}</span>
@@ -55,7 +53,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '../../stores/auth'
 import { useLocalizationStore } from '../../stores/localization'
 import LanguagePicker from './language-picker/LanguagePicker.vue'
@@ -65,12 +63,12 @@ export default defineComponent({
   name: 'Admin Panel',
   setup() {
     const router = useRouter()
+    const route = useRoute()
     const authStore = useAuthStore()
     const localizationStore = useLocalizationStore()
     const language = ref()
     const content = ref()
     const contentCopy = ref(Object.freeze({}))
-    const isLoading = ref(false)
     const isSaveButtonDisabled = ref(true)
     const activeTab = ref(0)
     const tabs = ref([
@@ -80,9 +78,12 @@ export default defineComponent({
       { label: 'Artists', icon: 'music_note', route: '/admin/artists' },
     ])
 
-    const setActiveTab = (tab: any, index: number) => {
-      activeTab.value = index
-      router.push(tab.route)
+    const isSelected = (tabName: string) => {
+      return route.name === tabName
+    }
+
+    const navigateTo = (path: string) => {
+      router.push(path)
     }
 
     const logout = async () => {
@@ -152,7 +153,8 @@ export default defineComponent({
       language,
       content,
       isSaveButtonDisabled,
-      setActiveTab,
+      isSelected,
+      navigateTo,
       logout,
       goToWebsite,
       updateContent,
@@ -161,6 +163,11 @@ export default defineComponent({
     }
   },
 })
+
+// When adding a new language, videos get updated with the previously selected language data
+// When changing url in one language, video data gets deleted in all other languages (url is updated properly)
+
+// Save button - disable / enable problem
 </script>
 
 <style lang="scss" scoped src="./AdminPanel.scss"></style>

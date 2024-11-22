@@ -105,7 +105,6 @@ export default defineComponent({
             defaultLanguage.value,
           ])
         }
-        // localizationStore.setAvailableLanguages(selectedLanguages.value)
         selectedLanguage.value = defaultLanguage.value
       } catch (error) {
         console.error('Error fetching languages:', error)
