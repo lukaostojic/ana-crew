@@ -10,6 +10,12 @@
 
   &__url {
     border-bottom: 1px solid $border-color-light;
+
+    small.error-text {
+      top: 68px;
+      background-color: $primary-theme-color3;
+      color: $red-color;
+    }
   }
 
   &__actions {
@@ -19,6 +25,11 @@
 
     button {
       width: 100px;
+
+      &.disabled {
+        opacity: 0.5;
+        pointer-events: none;
+      }
     }
   }
 }

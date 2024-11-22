@@ -106,11 +106,16 @@ export default defineComponent({
     }
 
     const updateContent = (updatedContent: any) => {
+      const hasEmptyUrl =
+        Array.isArray(updatedContent.videos) &&
+        updatedContent.videos.some((video: any) => !video.url || video.url.trim() === '')
+
       content.value = {
         ...content.value,
         ...updatedContent,
       }
-      isSaveButtonDisabled.value = deepEqual(content.value, contentCopy.value)
+
+      isSaveButtonDisabled.value = hasEmptyUrl || deepEqual(content.value, contentCopy.value)
     }
 
     const saveContent = async () => {
@@ -126,6 +131,7 @@ export default defineComponent({
       ).map((video) => video.url)
 
       await localizationStore.saveLocalizationContent()
+
       if (currentLanguage) {
         await localizationStore.saveVideoContent(currentLanguage)
       }
@@ -166,8 +172,8 @@ export default defineComponent({
 
 // When adding a new language, videos get updated with the previously selected language data
 // When changing url in one language, video data gets deleted in all other languages (url is updated properly)
-
-// Save button - disable / enable problem
+// When removing a language, 'editing content for:' disappears
+// Delete videos from db
 </script>
 
 <style lang="scss" scoped src="./AdminPanel.scss"></style>
