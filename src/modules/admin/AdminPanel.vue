@@ -56,6 +56,9 @@
   <!-- <div class="modal p-absolute w-100 h-100">
     <modal />
   </div> -->
+  <div class="notification p-absolute">
+    <notification />
+  </div>
 </template>
 
 <script lang="ts">
@@ -67,9 +70,10 @@ import { deepEqual } from '../../helpers/helper-functions'
 import type { Video } from '../../types/content'
 import LanguagePicker from './language-picker/LanguagePicker.vue'
 import Modal from './shared/modal/Modal.vue'
+import Notification from './shared/notification/Notification.vue'
 
 export default defineComponent({
-  components: { LanguagePicker, Modal },
+  components: { LanguagePicker, Modal, Notification },
   name: 'Admin Panel',
   setup() {
     const router = useRouter()
@@ -176,10 +180,12 @@ export default defineComponent({
   },
 })
 
-// Set videos placeholder on new language addition
+// Optimize service - update videos only if video is added
+// Set videos placeholder on new language addition (prevent populating video data with the data from the selected language)
 // When changing url in one language, video data gets deleted in all other languages (url is updated properly)
-// Delete videos from db
 // When removing a language, that language isn't available in all languages array (until refresh)
+
+// Implement Quill editor for About Us section
 </script>
 
 <style lang="scss" scoped src="./AdminPanel.scss"></style>

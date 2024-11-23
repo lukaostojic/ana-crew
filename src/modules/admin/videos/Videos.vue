@@ -25,7 +25,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from 'vue'
+import { defineComponent, computed } from 'vue'
+import { useLocalizationStore } from '../../../stores/localization'
 import VideoItem from './video-item/VideoItem.vue'
 
 export default defineComponent({
@@ -48,9 +49,19 @@ export default defineComponent({
       emit('update-content', { videos: newVideos })
     }
 
-    const removeVideo = (index: number) => {
-      const newVideos = videos.value.filter((_, i) => i !== index)
-      emit('update-content', { videos: newVideos })
+    const removeVideo = async (index: number) => {
+      const videoToDelete = videos.value[index]
+      if (!videoToDelete?.url) return
+
+      const localizationStore = useLocalizationStore()
+
+      try {
+        await localizationStore.deleteVideo(videoToDelete.url)
+        const newVideos = videos.value.filter((_, i) => i !== index)
+        emit('update-content', { videos: newVideos })
+      } catch (error) {
+        console.error('Failed to delete video:', error)
+      }
     }
 
     return {

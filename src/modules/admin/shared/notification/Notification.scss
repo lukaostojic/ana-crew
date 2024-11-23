@@ -1,0 +1,25 @@
+@import '../../../../styles/variables';
+
+.notification {
+  &__wrapper {
+    left: 16px;
+    bottom: 16px;
+    width: 284px;
+    background-color: $green-color;
+    color: $white-color;
+    border-radius: $default-border-radius;
+    pointer-events: none;
+    transform: translateY(16px);
+    opacity: 0;
+    transition: all 0.25s;
+
+    &.visible {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  &__inner {
+    font-size: 14px;
+  }
+}

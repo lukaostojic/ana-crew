@@ -5,6 +5,7 @@ import {
   updateLocalizationContent,
   addNewLanguageContent,
   deleteLanguageContent,
+  deleteVideoFromAllLanguages,
 } from '../services/localization.service'
 import type { Language } from '@/services/language.service'
 import type { Video } from '@/types/content'
@@ -35,6 +36,7 @@ export const useLocalizationStore = defineStore('localization', () => {
   const saveLocalizationContent = async () => {
     if (selectedLanguage.value) {
       await updateLocalizationContent(selectedLanguage.value.code, { ...content.value })
+      // console.log(selectedLanguage.value.code)
     }
   }
 
@@ -56,7 +58,14 @@ export const useLocalizationStore = defineStore('localization', () => {
       }
 
       await updateLocalizationContent(language.code, languageContent)
+      // console.log('video content')
     }
+  }
+
+  const deleteVideo = async (videoUrl: string) => {
+    const languageCodes = availableLanguages.value.map((lang) => lang.code)
+    await deleteVideoFromAllLanguages(languageCodes, videoUrl)
+    content.value.videos = content.value.videos.filter((video: any) => video.url !== videoUrl)
   }
 
   const addLanguageContent = async (languageCode: string) => {
@@ -80,6 +89,7 @@ export const useLocalizationStore = defineStore('localization', () => {
     loadLocalizationContent,
     saveLocalizationContent,
     saveVideoContent,
+    deleteVideo,
     addLanguageContent,
     removeLanguageContent,
   }
