@@ -2,13 +2,33 @@
 
 .modal {
   &__wrapper {
+    visibility: hidden;
     background-color: rgb(49 49 49 / 78%);
+    pointer-events: auto;
+    opacity: 0;
+    z-index: 20;
+    transition: all 0.15s ease-in-out;
+
+    &.visible {
+      visibility: visible;
+      opacity: 1;
+    }
   }
 
   &__inner {
     width: 400px;
-    height: 280px;
     background-color: $white-color;
     border-radius: $default-border-radius;
+
+    .warning {
+      font-size: 48px;
+      color: $primary-theme-color1;
+    }
+  }
+
+  &__actions {
+    button {
+      width: 120px;
+    }
   }
 }

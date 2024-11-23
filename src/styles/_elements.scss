@@ -40,6 +40,11 @@
     background-color: $red-color;
     color: $white-color;
   }
+
+  &--success {
+    background-color: $green-color;
+    color: $white-color;
+  }
 }
 
 .input {

@@ -68,6 +68,7 @@ import {
   deleteSelectedLanguage,
 } from '../../../services/language.service'
 import { useLocalizationStore } from '../../../stores/localization'
+import { useModalStore } from '../../../stores/modal'
 import { languages as allLanguages } from '../../../config/languages'
 import type { Language } from '../../../services/language.service'
 
@@ -76,6 +77,7 @@ export default defineComponent({
   emits: ['disable-save'],
   setup(_, { emit }) {
     const localizationStore = useLocalizationStore()
+    const modalStore = useModalStore()
     const isOpen = ref(false)
     const searchQuery = ref('')
     const dropdown = ref<HTMLElement | null>(null)
@@ -135,16 +137,21 @@ export default defineComponent({
     }
 
     const deleteLanguage = async (language: Language) => {
-      try {
-        selectedLanguages.value = selectedLanguages.value.filter(
-          (selected) => selected.code !== language.code,
-        )
+      const message = `Are you sure you want to delete content for ${language.name}?`
+      const isConfirmed = await modalStore.showConfirmationModal(message)
 
-        availableLanguages.value.push(language)
-        await deleteSelectedLanguage(language)
-        localizationStore.removeLanguageContent(language)
-      } catch (error) {
-        console.error('Error deleting language:', error)
+      if (isConfirmed) {
+        try {
+          selectedLanguages.value = selectedLanguages.value.filter(
+            (selected) => selected.code !== language.code,
+          )
+
+          availableLanguages.value.push(language)
+          await deleteSelectedLanguage(language)
+          localizationStore.removeLanguageContent(language)
+        } catch (error) {
+          console.error('Error deleting language:', error)
+        }
       }
     }
 

@@ -49,6 +49,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, watch } from 'vue'
+import { useModalStore } from '../../../../stores/modal'
 import { isValidURL } from '../../../../helpers/helper-functions'
 
 export default defineComponent({
@@ -57,6 +58,7 @@ export default defineComponent({
   },
   emits: ['update-video', 'remove-video'],
   setup(props, { emit }) {
+    const modalStore = useModalStore()
     const videoDataCopy = ref({ ...props.videoData })
     const isSaveButtonDisabled = ref(true)
     const isUrlValid = ref(true)
@@ -79,8 +81,13 @@ export default defineComponent({
       }
     }
 
-    const removeVideo = () => {
-      emit('remove-video')
+    const removeVideo = async () => {
+      const message = `Are you sure you want to delete this video?`
+      const isConfirmed = await modalStore.showConfirmationModal(message)
+
+      if (isConfirmed) {
+        emit('remove-video')
+      }
     }
 
     watch(

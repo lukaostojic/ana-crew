@@ -53,9 +53,9 @@
       </router-view>
     </div>
   </div>
-  <!-- <div class="modal p-absolute w-100 h-100">
+  <div class="modal p-absolute w-100 h-100">
     <modal />
-  </div> -->
+  </div>
   <div class="notification p-absolute">
     <notification />
   </div>
