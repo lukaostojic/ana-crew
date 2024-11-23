@@ -12,14 +12,16 @@
   </div>
   <div class="d-flex">
     <div class="admin__sidemenu">
+      <!-- Language Picker -->
       <language-picker @disable-save="onDisableSave" />
     </div>
     <div class="d-flex-col w-100">
+      <!-- Tabs -->
       <div class="admin__tabs d-flex justify-sb align-center w-100 px-4 py-5">
         <div
           v-for="(tab, index) in tabs"
           :key="index"
-          :class="['tab', { active: isSelected(tab.label) }]"
+          :class="['tab', { active: isSelectedTab(tab.label) }]"
           @click="navigateTo(tab.route)"
           class="admin__tab-item d-flex align-center p-relative px-5 py-3"
         >
@@ -27,8 +29,9 @@
           <span class="material-symbols-outlined">{{ tab.icon }}</span>
         </div>
       </div>
+      <!-- Header -->
       <div class="admin__save-button d-flex justify-sb align-center p-relative px-4">
-        <div v-if="language">
+        <div>
           Editing content for:
           <span class="language ml-1 px-2 py-1 text-bold-1">{{ language.name }}</span>
         </div>
@@ -42,6 +45,7 @@
           <span class="material-symbols-outlined"> save </span>
         </button>
       </div>
+      <!-- Router View -->
       <router-view v-slot="{ Component }">
         <keep-alive>
           <component :is="Component" :content="content" @update-content="updateContent" />
@@ -59,6 +63,8 @@ import { defineComponent, ref, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '../../stores/auth'
 import { useLocalizationStore } from '../../stores/localization'
+import { deepEqual } from '../../helpers/helper-functions'
+import type { Video } from '../../types/content'
 import LanguagePicker from './language-picker/LanguagePicker.vue'
 import Modal from './shared/modal/Modal.vue'
 
@@ -82,7 +88,7 @@ export default defineComponent({
       { label: 'Artists', icon: 'music_note', route: '/admin/artists' },
     ])
 
-    const isSelected = (tabName: string) => {
+    const isSelectedTab = (tabName: string) => {
       return route.name === tabName
     }
 
@@ -103,10 +109,6 @@ export default defineComponent({
       await localizationStore.loadLocalizationContent()
       content.value = { ...localizationStore.content }
       contentCopy.value = Object.freeze(JSON.parse(JSON.stringify(content.value)))
-    }
-
-    const deepEqual = (obj1: any, obj2: any): boolean => {
-      return JSON.stringify(obj1) === JSON.stringify(obj2)
     }
 
     const updateContent = (updatedContent: any) => {
@@ -132,7 +134,7 @@ export default defineComponent({
 
       localizationStore.videoContent = (
         Array.isArray(content.value.videos) ? content.value.videos : []
-      ).map((video) => video.url)
+      ).map((video: Video) => video.url)
 
       await localizationStore.saveLocalizationContent()
 
@@ -163,7 +165,7 @@ export default defineComponent({
       language,
       content,
       isSaveButtonDisabled,
-      isSelected,
+      isSelectedTab,
       navigateTo,
       logout,
       goToWebsite,
@@ -174,9 +176,10 @@ export default defineComponent({
   },
 })
 
+// Set videos placeholder on new language addition
 // When changing url in one language, video data gets deleted in all other languages (url is updated properly)
-// When removing a language, 'editing content for:' disappears
 // Delete videos from db
+// When removing a language, that language isn't available in all languages array (until refresh)
 </script>
 
 <style lang="scss" scoped src="./AdminPanel.scss"></style>

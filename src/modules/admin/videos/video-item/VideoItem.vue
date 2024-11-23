@@ -49,6 +49,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, watch } from 'vue'
+import { isValidURL } from '../../../../helpers/helper-functions'
 
 export default defineComponent({
   props: {
@@ -62,7 +63,14 @@ export default defineComponent({
 
     const validateUrl = () => {
       isUrlValid.value = isValidURL(videoDataCopy.value.url)
-      isSaveButtonDisabled.value = !isUrlValid.value || videoDataCopy.value.url.trim() === ''
+
+      const isUnchanged =
+        videoDataCopy.value.url === props.videoData?.url &&
+        videoDataCopy.value.heading === props.videoData?.heading &&
+        videoDataCopy.value.description === props.videoData?.description
+
+      isSaveButtonDisabled.value =
+        !isUrlValid.value || videoDataCopy.value.url.trim() === '' || isUnchanged
     }
 
     const updateVideo = () => {
@@ -75,12 +83,6 @@ export default defineComponent({
       emit('remove-video')
     }
 
-    function isValidURL(url: string) {
-      const regex =
-        /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/
-      return regex.test(url)
-    }
-
     watch(
       () => props.videoData,
       (newVal) => {
@@ -88,6 +90,14 @@ export default defineComponent({
         validateUrl()
       },
       { deep: true, immediate: true },
+    )
+
+    watch(
+      () => videoDataCopy.value,
+      () => {
+        validateUrl()
+      },
+      { deep: true },
     )
 
     return {

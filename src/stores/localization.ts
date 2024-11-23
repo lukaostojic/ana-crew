@@ -7,6 +7,7 @@ import {
   deleteLanguageContent,
 } from '../services/localization.service'
 import type { Language } from '@/services/language.service'
+import type { Video } from '@/types/content'
 
 export const useLocalizationStore = defineStore('localization', () => {
   const selectedLanguage = ref<Language | null>({ code: 'en', name: 'English' })
@@ -46,7 +47,7 @@ export const useLocalizationStore = defineStore('localization', () => {
       } else {
         const videos = Array.isArray(languageContent.videos) ? languageContent.videos : []
 
-        languageContent.videos = content.value.videos.map((video) => {
+        languageContent.videos = content.value.videos.map((video: Video) => {
           const existingVideo = videos.find((v) => v.url === video.url)
           return existingVideo
             ? { ...existingVideo, url: video.url }

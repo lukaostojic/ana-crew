@@ -38,7 +38,7 @@ export default defineComponent({
     const videos = computed(() => props.content?.videos || [])
 
     const addNewVideo = () => {
-      const newVideos = [...videos.value, { heading: '', description: '', url: '' }]
+      const newVideos = [{ heading: '', description: '', url: '' }, ...videos.value]
       emit('update-content', { videos: newVideos })
     }
 
