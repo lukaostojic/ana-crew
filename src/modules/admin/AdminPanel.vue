@@ -13,7 +13,7 @@
   <div class="d-flex">
     <div class="admin__sidemenu">
       <!-- Language Picker -->
-      <language-picker @disable-save="onDisableSave" />
+      <language-picker :isSaveButtonDisabled="isSaveButtonDisabled" @disable-save="onDisableSave" />
     </div>
     <div class="d-flex-col w-100">
       <!-- Tabs -->
@@ -118,16 +118,12 @@ export default defineComponent({
 
     const updateContent = (updatedContent: any) => {
       isNewVideoAdded.value = updatedContent.newVideoAdded
-      const hasEmptyUrl =
-        Array.isArray(updatedContent.videos) &&
-        updatedContent.videos.some((video: any) => !video.url || video.url.trim() === '')
-
       content.value = {
         ...content.value,
         ...updatedContent,
       }
 
-      isSaveButtonDisabled.value = hasEmptyUrl || deepEqual(content.value, contentCopy.value)
+      isSaveButtonDisabled.value = deepEqual(content.value, contentCopy.value)
     }
 
     const saveContent = async () => {
@@ -182,6 +178,7 @@ export default defineComponent({
   },
 })
 
+// Disable save button when default language content is reset to its original state
 // Set videos placeholder on new language addition (prevent populating video data with the data from the selected language)
 // When changing url in one language, video data gets deleted in all other languages (url is updated properly)
 // When removing a language, that language isn't available in all languages array (until refresh)

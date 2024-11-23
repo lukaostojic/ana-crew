@@ -74,8 +74,11 @@ import type { Language } from '../../../services/language.service'
 
 export default defineComponent({
   name: 'CustomLanguageDropdown',
+  props: {
+    isSaveButtonDisabled: Boolean,
+  },
   emits: ['disable-save'],
-  setup(_, { emit }) {
+  setup(props, { emit }) {
     const localizationStore = useLocalizationStore()
     const modalStore = useModalStore()
     const isOpen = ref(false)
@@ -89,9 +92,9 @@ export default defineComponent({
 
     const fetchLanguages = async () => {
       try {
-        const [selected, defaultLang] = await Promise.all([
-          fetchSelectedLanguages(),
+        const [defaultLang, selected] = await Promise.all([
           fetchDefaultLanguage(),
+          fetchSelectedLanguages(),
         ])
 
         selectedLanguages.value = selected
@@ -126,10 +129,23 @@ export default defineComponent({
       }
     }
 
-    const handleLanguageClick = (language: Language) => {
+    const changeLanguage = (language: Language) => {
       selectedLanguage.value = language
       localizationStore.setLanguage(language)
       emit('disable-save', true)
+    }
+
+    const handleLanguageClick = async (language: Language) => {
+      if (!props.isSaveButtonDisabled) {
+        const message = `All new data you have filled in for the <strong>${selectedLanguage.value?.name}</strong> language will be lost. <br><br> Proceed anyway?`
+        const isConfirmed = await modalStore.showConfirmationModal(message)
+
+        if (isConfirmed) {
+          changeLanguage(language)
+        }
+      } else {
+        changeLanguage(language)
+      }
     }
 
     const isSelectedLanguage = (language: Language) => {

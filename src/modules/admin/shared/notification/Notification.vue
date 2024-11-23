@@ -11,6 +11,7 @@
 <script lang="ts">
 import { defineComponent, ref, watch } from 'vue'
 import { useNotificationStore } from '../../../../stores/notification'
+import { NOTIFICATION_TIMEOUT } from '../../../../stores/notification'
 
 export default defineComponent({
   name: 'Notification',
@@ -19,7 +20,6 @@ export default defineComponent({
     const notificationStore = useNotificationStore()
     const notificationContent = ref('')
     const showNotification = ref(false)
-    const notificationTimeout = ref(7500)
 
     watch(
       () => notificationStore.notification,
@@ -29,7 +29,7 @@ export default defineComponent({
 
         setTimeout(() => {
           showNotification.value = false
-        }, notificationTimeout.value)
+        }, NOTIFICATION_TIMEOUT)
       },
     )
 
