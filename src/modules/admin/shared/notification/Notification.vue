@@ -3,8 +3,8 @@
     :class="{ visible: showNotification }"
     class="notification__wrapper p-relative p-3 text-center"
   >
-    <h4 class="mb-3">Notification</h4>
-    <div class="notification__inner">{{ notificationContent }}</div>
+    <h4 class="mb-3">Success!</h4>
+    <div class="notification__inner" v-html="notificationContent"></div>
   </div>
 </template>
 
@@ -19,7 +19,7 @@ export default defineComponent({
     const notificationStore = useNotificationStore()
     const notificationContent = ref('')
     const showNotification = ref(false)
-    const notificationTimeout = ref(5000)
+    const notificationTimeout = ref(7500)
 
     watch(
       () => notificationStore.notification,

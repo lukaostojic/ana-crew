@@ -17,6 +17,8 @@ export const useLocalizationStore = defineStore('localization', () => {
     videos: [],
   })
   const videoContent = ref([])
+  // Logic for editin existing video after a new one has been added
+  const isNewVideoAdded = ref(false)
 
   const setLanguage = (language: Language) => {
     selectedLanguage.value = language

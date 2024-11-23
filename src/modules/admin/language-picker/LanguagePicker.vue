@@ -137,7 +137,7 @@ export default defineComponent({
     }
 
     const deleteLanguage = async (language: Language) => {
-      const message = `Are you sure you want to delete content for ${language.name}?`
+      const message = `Are you sure you want to delete content for <br><strong>${language.name}</strong>?`
       const isConfirmed = await modalStore.showConfirmationModal(message)
 
       if (isConfirmed) {

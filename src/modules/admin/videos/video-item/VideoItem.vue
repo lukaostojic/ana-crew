@@ -82,7 +82,7 @@ export default defineComponent({
     }
 
     const removeVideo = async () => {
-      const message = `Are you sure you want to delete this video?`
+      const message = `Are you sure you want to delete <br><strong>${videoDataCopy.value.heading}</strong>?`
       const isConfirmed = await modalStore.showConfirmationModal(message)
 
       if (isConfirmed) {

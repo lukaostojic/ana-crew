@@ -6,9 +6,7 @@
     <div class="modal__inner d-flex-col justify-center align-center p-6">
       <span class="material-symbols-outlined warning"> warning </span>
       <h4 class="mb-4">Warning!</h4>
-      <div class="modal__message text-center mb-6">
-        {{ message }}
-      </div>
+      <div v-html="message" class="modal__message text-center mb-6"></div>
       <div class="modal__actions">
         <button @click="confirm" class="button button--success mr-2">Yes</button>
         <button @click="closeModal" class="button button--danger">No</button>

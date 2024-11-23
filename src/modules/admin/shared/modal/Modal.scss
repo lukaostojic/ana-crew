@@ -24,6 +24,16 @@
       font-size: 48px;
       color: $primary-theme-color1;
     }
+
+    h4 {
+      color: $primary-theme-color1;
+    }
+  }
+
+  &__message {
+    .item {
+      color: $primary-theme-color1;
+    }
   }
 
   &__actions {
