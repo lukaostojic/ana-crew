@@ -19,14 +19,15 @@ export const fetchLocalizationContent = async (
 export const updateLocalizationContent = async (
   languageCode: string,
   content: any,
+  isVideoContent: boolean,
 ): Promise<void> => {
   const langDocRef = doc(db, 'content', languageCode)
   await updateDoc(langDocRef, content)
 
-  // console.log('kk')
-
   const notificationStore = useNotificationStore()
-  notificationStore.setNotification(`Content for language '${languageCode}' has been updated.`)
+  isVideoContent
+    ? notificationStore.setNotification('New video successfully added')
+    : notificationStore.setNotification(`Content for language '${languageCode}' has been updated.`)
 }
 
 export const addNewLanguageContent = async (languageCode: string): Promise<void> => {
@@ -67,7 +68,6 @@ export const deleteVideoFromLanguage = async (
   if (Array.isArray(contentData.videos)) {
     const updatedVideos = contentData.videos.filter((video: any) => video.url !== videoUrl)
     await updateDoc(langDocRef, { videos: updatedVideos })
-    // console.log(`Video with URL '${videoUrl}' has been deleted from language '${languageCode}'.`)
   }
 }
 

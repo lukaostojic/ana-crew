@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent, ref, computed } from 'vue'
 import { useLocalizationStore } from '../../../stores/localization'
 import VideoItem from './video-item/VideoItem.vue'
 
@@ -37,16 +37,18 @@ export default defineComponent({
   emits: ['update-content'],
   setup(props, { emit }) {
     const videos = computed(() => props.content?.videos || [])
+    const isNewVideoAdded = ref(false)
 
     const addNewVideo = () => {
       const newVideos = [{ heading: '', description: '', url: '' }, ...videos.value]
-      emit('update-content', { videos: newVideos })
+      isNewVideoAdded.value = true
+      emit('update-content', { videos: newVideos, newVideoAdded: isNewVideoAdded.value })
     }
 
     const updateVideo = (index: number, updatedData: any) => {
       const newVideos = [...videos.value]
       newVideos[index] = updatedData
-      emit('update-content', { videos: newVideos })
+      emit('update-content', { videos: newVideos, newVideoAdded: isNewVideoAdded.value })
     }
 
     const removeVideo = async (index: number) => {

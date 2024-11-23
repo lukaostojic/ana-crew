@@ -35,14 +35,19 @@ export const useLocalizationStore = defineStore('localization', () => {
 
   const saveLocalizationContent = async () => {
     if (selectedLanguage.value) {
-      await updateLocalizationContent(selectedLanguage.value.code, { ...content.value })
-      // console.log(selectedLanguage.value.code)
+      const isVideoContent = false
+      await updateLocalizationContent(
+        selectedLanguage.value.code,
+        { ...content.value },
+        isVideoContent,
+      )
     }
   }
 
   const saveVideoContent = async (currentLanguage: string) => {
     for (const language of availableLanguages.value) {
       const languageContent = await fetchLocalizationContent(language.code)
+      const isVideoContent = true
 
       if (language.code === currentLanguage) {
         languageContent.videos = content.value.videos
@@ -57,8 +62,7 @@ export const useLocalizationStore = defineStore('localization', () => {
         })
       }
 
-      await updateLocalizationContent(language.code, languageContent)
-      // console.log('video content')
+      await updateLocalizationContent(language.code, languageContent, isVideoContent)
     }
   }
 

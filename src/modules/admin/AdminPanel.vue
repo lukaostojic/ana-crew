@@ -84,6 +84,7 @@ export default defineComponent({
     const content = ref()
     const contentCopy = ref(Object.freeze({}))
     const isSaveButtonDisabled = ref(true)
+    const isNewVideoAdded = ref(false)
     const activeTab = ref(0)
     const tabs = ref([
       { label: 'Content', icon: 'description', route: '/admin/content' },
@@ -116,6 +117,7 @@ export default defineComponent({
     }
 
     const updateContent = (updatedContent: any) => {
+      isNewVideoAdded.value = updatedContent.newVideoAdded
       const hasEmptyUrl =
         Array.isArray(updatedContent.videos) &&
         updatedContent.videos.some((video: any) => !video.url || video.url.trim() === '')
@@ -142,7 +144,7 @@ export default defineComponent({
 
       await localizationStore.saveLocalizationContent()
 
-      if (currentLanguage) {
+      if (currentLanguage && isNewVideoAdded.value) {
         await localizationStore.saveVideoContent(currentLanguage)
       }
 
@@ -180,7 +182,6 @@ export default defineComponent({
   },
 })
 
-// Optimize service - update videos only if video is added
 // Set videos placeholder on new language addition (prevent populating video data with the data from the selected language)
 // When changing url in one language, video data gets deleted in all other languages (url is updated properly)
 // When removing a language, that language isn't available in all languages array (until refresh)

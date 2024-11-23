@@ -83,7 +83,7 @@ export default defineComponent({
     }
 
     const updateContent = (field: string, value: any) => {
-      emit('update-content', { [field]: value })
+      emit('update-content', { [field]: value, newVideoAdded: false })
     }
 
     watch(
