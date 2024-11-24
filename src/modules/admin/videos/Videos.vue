@@ -15,6 +15,7 @@
     <div v-else class="videos__list pb-5">
       <div v-for="(video, index) in videos" :key="index">
         <VideoItem
+          :allVideos="videos"
           :videoData="video"
           @update-video="updateVideo(index, $event)"
           @remove-video="removeVideo(index)"
@@ -28,6 +29,7 @@
 import { defineComponent, ref, watch } from 'vue'
 import { useLocalizationStore } from '../../../stores/localization'
 import VideoItem from './video-item/VideoItem.vue'
+import type { Video } from '../../../types/content'
 
 export default defineComponent({
   components: { VideoItem },

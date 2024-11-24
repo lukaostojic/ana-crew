@@ -18,3 +18,8 @@ export type Video = {
   description: ''
   url: ''
 }
+
+export interface Language {
+  code: string
+  name: string
+}

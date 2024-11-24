@@ -19,8 +19,14 @@
         >
           Please enter a valid URL
         </small>
+        <small
+          v-if="isDuplicateUrlError && videoDataCopy.url.length > 0"
+          class="error-text p-absolute pr-2"
+        >
+          This URL is already in use
+        </small>
         <div class="preview p-absolute">
-          <span class="material-symbols-outlined"> preview </span>
+          <span class="material-symbols-outlined"> visibility </span>
         </div>
       </div>
       <div class="video-item__actions d-flex p-relative">
@@ -30,7 +36,7 @@
           :class="{ disabled: isSaveButtonDisabled }"
           class="button button--primary button--icon mr-2"
         >
-          <span>Save</span>
+          <span>Update</span>
           <span class="material-symbols-outlined"> check </span>
         </button>
         <button @click="removeVideo" class="button button--danger button--icon">
@@ -52,12 +58,21 @@
 
 <script lang="ts">
 import { defineComponent, ref, watch } from 'vue'
+import type { PropType } from 'vue'
 import { useModalStore } from '../../../../stores/modal'
 import { isValidURL } from '../../../../helpers/helper-functions'
+import type { Video } from '../../../../types/content'
 
 export default defineComponent({
   props: {
-    videoData: Object,
+    allVideos: {
+      type: Object as PropType<Video[]>,
+      required: true,
+    },
+    videoData: {
+      type: Object as PropType<Video>,
+      required: true,
+    },
   },
   emits: ['update-video', 'remove-video'],
   setup(props, { emit }) {
@@ -65,9 +80,13 @@ export default defineComponent({
     const videoDataCopy = ref({ ...props.videoData })
     const isSaveButtonDisabled = ref(true)
     const isUrlValid = ref(true)
+    const isDuplicateUrlError = ref(false)
 
     const validateUrl = () => {
       isUrlValid.value = isValidURL(videoDataCopy.value.url)
+      isDuplicateUrlError.value = props.allVideos.some(
+        (v: Video) => v.url === videoDataCopy.value.url && v !== props.videoData,
+      )
 
       const isUnchanged =
         videoDataCopy.value.url === props.videoData?.url &&
@@ -75,7 +94,10 @@ export default defineComponent({
         videoDataCopy.value.description === props.videoData?.description
 
       isSaveButtonDisabled.value =
-        !isUrlValid.value || videoDataCopy.value.url.trim() === '' || isUnchanged
+        !isUrlValid.value ||
+        isDuplicateUrlError.value ||
+        videoDataCopy.value.url.trim() === '' ||
+        isUnchanged
     }
 
     const updateVideo = () => {
@@ -95,6 +117,10 @@ export default defineComponent({
       if (isConfirmed) {
         emit('remove-video')
       }
+    }
+
+    const isDuplicateUrl = (video: Video): boolean => {
+      return props.allVideos.some((v: Video) => v.url === video.url)
     }
 
     watch(
@@ -118,6 +144,7 @@ export default defineComponent({
       videoDataCopy,
       isSaveButtonDisabled,
       isUrlValid,
+      isDuplicateUrlError,
       validateUrl,
       updateVideo,
       removeVideo,

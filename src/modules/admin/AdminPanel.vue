@@ -33,7 +33,7 @@
       <div class="admin__save-button d-flex justify-sb align-center p-relative px-4">
         <div>
           Editing content for:
-          <span class="language ml-1 px-2 py-1 text-bold-1">{{ language.name }}</span>
+          <span class="language ml-1 px-2 py-1 text-bold-1">{{ language?.name }}</span>
         </div>
         <button
           :disabled="isSaveButtonDisabled"
@@ -67,7 +67,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '../../stores/auth'
 import { useLocalizationStore } from '../../stores/localization'
 import { deepEqual } from '../../helpers/helper-functions'
-import type { Video } from '../../types/content'
+import type { Content, Video, Language } from '../../types/content'
 import LanguagePicker from './language-picker/LanguagePicker.vue'
 import Modal from './shared/modal/Modal.vue'
 import Notification from './shared/notification/Notification.vue'
@@ -81,8 +81,8 @@ export default defineComponent({
     const authStore = useAuthStore()
     const localizationStore = useLocalizationStore()
 
-    const language = ref()
-    const content = ref()
+    const language = ref<Language | null>()
+    const content = ref<Content>()
     const contentCopy = ref(Object.freeze({}))
     const isSaveButtonDisabled = ref(true)
     const isNewVideoAdded = ref(false)
@@ -113,7 +113,7 @@ export default defineComponent({
 
     const fetchContent = async () => {
       await localizationStore.loadLocalizationContent()
-      content.value = { ...localizationStore.content }
+      content.value = { ...(localizationStore.content as Content) }
       contentCopy.value = Object.freeze(JSON.parse(JSON.stringify(content.value)))
     }
 
@@ -143,12 +143,12 @@ export default defineComponent({
 
       localizationStore.content = {
         ...content.value,
-        videos: Array.isArray(content.value.videos) ? content.value.videos : [],
+        videos: Array.isArray(content.value?.videos) ? content.value.videos : [],
       }
 
-      localizationStore.videoContent = (
-        Array.isArray(content.value.videos) ? content.value.videos : []
-      ).map((video: Video) => video.url)
+      localizationStore.videoContent = Array.isArray(content.value?.videos)
+        ? content.value.videos
+        : []
 
       await localizationStore.saveLocalizationContent()
 

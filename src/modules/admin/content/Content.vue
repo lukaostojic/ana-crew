@@ -42,6 +42,11 @@
           </div>
         </div>
       </div>
+      <!-- About Us -->
+      <div class="content__section p-4 mb-5">
+        <h2 class="mb-5">About Us</h2>
+        <div class="content__item d-flex-col justify-sb mb-4"></div>
+      </div>
     </div>
   </div>
 </template>
