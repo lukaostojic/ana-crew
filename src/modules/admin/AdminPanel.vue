@@ -80,6 +80,7 @@ export default defineComponent({
     const route = useRoute()
     const authStore = useAuthStore()
     const localizationStore = useLocalizationStore()
+
     const language = ref()
     const content = ref()
     const contentCopy = ref(Object.freeze({}))
@@ -117,13 +118,24 @@ export default defineComponent({
     }
 
     const updateContent = (updatedContent: any) => {
-      isNewVideoAdded.value = updatedContent.newVideoAdded
+      const isOnVideosRoute = route.name === 'Videos'
+      const hasEmptyUrl =
+        Array.isArray(updatedContent.videos) &&
+        updatedContent.videos.some((video: any) => !video.url || video.url.trim() === '')
+
       content.value = {
         ...content.value,
         ...updatedContent,
       }
 
-      isSaveButtonDisabled.value = deepEqual(content.value, contentCopy.value)
+      if (isOnVideosRoute && updatedContent.videos && hasEmptyUrl) {
+        isSaveButtonDisabled.value = true
+        isNewVideoAdded.value = true
+      } else if (deepEqual(content.value, contentCopy.value)) {
+        isSaveButtonDisabled.value = true
+      } else {
+        isSaveButtonDisabled.value = false
+      }
     }
 
     const saveContent = async () => {
@@ -178,7 +190,6 @@ export default defineComponent({
   },
 })
 
-// Disable save button when default language content is reset to its original state
 // Set videos placeholder on new language addition (prevent populating video data with the data from the selected language)
 // When changing url in one language, video data gets deleted in all other languages (url is updated properly)
 // When removing a language, that language isn't available in all languages array (until refresh)

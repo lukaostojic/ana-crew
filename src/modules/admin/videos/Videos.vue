@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from 'vue'
+import { defineComponent, ref, watch } from 'vue'
 import { useLocalizationStore } from '../../../stores/localization'
 import VideoItem from './video-item/VideoItem.vue'
 
@@ -36,31 +36,36 @@ export default defineComponent({
   },
   emits: ['update-content'],
   setup(props, { emit }) {
-    const videos = computed(() => props.content?.videos || [])
+    const localizationStore = useLocalizationStore()
+    const videos = ref([...(props.content?.videos || [])])
     const isNewVideoAdded = ref(false)
+
+    watch(
+      () => props.content?.videos,
+      (newVideos) => {
+        videos.value = [...(newVideos || [])]
+      },
+    )
 
     const addNewVideo = () => {
       const newVideos = [{ heading: '', description: '', url: '' }, ...videos.value]
       isNewVideoAdded.value = true
-      emit('update-content', { videos: newVideos, newVideoAdded: isNewVideoAdded.value })
+      emit('update-content', { videos: newVideos })
     }
 
     const updateVideo = (index: number, updatedData: any) => {
       const newVideos = [...videos.value]
       newVideos[index] = updatedData
-      emit('update-content', { videos: newVideos, newVideoAdded: isNewVideoAdded.value })
+      emit('update-content', { videos: newVideos })
     }
 
     const removeVideo = async (index: number) => {
       const videoToDelete = videos.value[index]
       if (!videoToDelete?.url) return
 
-      const localizationStore = useLocalizationStore()
-
       try {
         await localizationStore.deleteVideo(videoToDelete.url)
-        const newVideos = videos.value.filter((_, i) => i !== index)
-        emit('update-content', { videos: newVideos })
+        videos.value = videos.value.filter((_, i) => i !== index)
       } catch (error) {
         console.error('Failed to delete video:', error)
       }

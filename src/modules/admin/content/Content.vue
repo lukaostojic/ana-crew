@@ -47,7 +47,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch, onMounted } from 'vue'
+import { defineComponent, ref, watch } from 'vue'
 import type { Content } from '../../../types/content'
 
 export default defineComponent({
@@ -83,7 +83,7 @@ export default defineComponent({
     }
 
     const updateContent = (field: string, value: any) => {
-      emit('update-content', { [field]: value, newVideoAdded: false })
+      emit('update-content', { [field]: value })
     }
 
     watch(
