@@ -2,7 +2,7 @@
   <div class="content__wrapper px-4">
     <div class="inner" v-if="contentData">
       <!-- Header Section -->
-      <div class="content__section p-4 mb-5">
+      <div class="content__section p-4">
         <h2 class="mb-5">Header</h2>
         <div class="content__item d-flex-col justify-sb mb-4">
           <div class="label mb-1">Heading</div>
@@ -17,33 +17,14 @@
           <div class="label mb-1">Subheading</div>
           <textarea
             class="textarea"
-            rows="4"
+            rows="8"
             v-model="contentData.header.subheading"
             @input="updateContent('HEADER_SUBHEADING', contentData.header.subheading)"
           ></textarea>
         </div>
       </div>
-      <!-- Navigation Section -->
-      <div class="content__section p-4 mb-5">
-        <h2 class="mb-5">Navigation</h2>
-        <div class="d-flex navigation">
-          <div
-            class="content__item navigation-item d-flex-col justify-sb mb-3"
-            v-for="(item, index) in contentData.navigation"
-            :key="index"
-          >
-            <div class="label mb-1">{{ item.label }}</div>
-            <textarea
-              class="textarea"
-              rows="1"
-              v-model="item.value"
-              @input="updateContent(`NAVIGATION_${item.label.toUpperCase()}`, item.value)"
-            ></textarea>
-          </div>
-        </div>
-      </div>
-      <!-- About Us -->
-      <div class="content__section p-4 mb-5">
+      <!-- About Us Section -->
+      <div class="content__section p-4">
         <h2 class="mb-5">About Us</h2>
         <div class="content__item d-flex-col justify-sb mb-4">
           <div class="label mb-1">Heading</div>
@@ -62,6 +43,25 @@
             v-model="contentData.aboutUs.content"
             @input="updateContent('ABOUT_US_CONTENT', contentData.aboutUs.content)"
           ></textarea>
+        </div>
+      </div>
+      <!-- Navigation Section -->
+      <div class="content__section navigation-section p-4 mb-5">
+        <h2 class="mb-5">Navigation</h2>
+        <div class="d-flex navigation">
+          <div
+            class="content__item navigation-item d-flex-col justify-sb mb-3"
+            v-for="(item, index) in contentData.navigation"
+            :key="index"
+          >
+            <div class="label mb-1">{{ item.label }}</div>
+            <textarea
+              class="textarea"
+              rows="1"
+              v-model="item.value"
+              @input="updateContent(`NAVIGATION_${item.label.toUpperCase()}`, item.value)"
+            ></textarea>
+          </div>
         </div>
       </div>
     </div>
