@@ -21,8 +21,12 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     align-content: start;
-    gap: 20px;
+    grid-gap: 20px;
     height: calc(100vh - 232px);
     overflow-y: auto;
+
+    @media (max-width: 1200px) {
+      grid-template-columns: repeat(1, 1fr);
+    }
   }
 }

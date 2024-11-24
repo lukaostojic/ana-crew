@@ -2,9 +2,8 @@
   <div class="video-item__wrapper d-flex-col p-4">
     <h2 v-if="videoDataCopy.heading.length" class="mb-5">{{ videoDataCopy.heading }}</h2>
     <h2 v-else class="mb-5">Title</h2>
-
-    <!-- Video URL Input -->
     <div class="video-item__url d-flex justify-sb pb-4 mb-4">
+      <!-- Video URL Input -->
       <div class="d-flex-col p-relative w-100 mr-4">
         <label class="mb-1">Video URL</label>
         <input
@@ -29,6 +28,7 @@
           <span class="material-symbols-outlined"> visibility </span>
         </div>
       </div>
+      <!-- Actions -->
       <div class="video-item__actions d-flex p-relative">
         <button
           @click="updateVideo"

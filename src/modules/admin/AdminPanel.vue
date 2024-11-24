@@ -1,5 +1,13 @@
 <template>
-  <div class="admin__header d-flex justify-sb align-center px-4 py-4 w-100">
+  <!-- Main Header -->
+  <div class="admin__header d-flex justify-sb align-center w-100 p-4">
+    <div
+      @click="toggleSidemenu"
+      :class="{ shrinked: !isSidemenuOpened }"
+      class="sidemenu-close d-flex align-center justify-center p-absolute"
+    >
+      <span class="material-symbols-outlined"> menu_open </span>
+    </div>
     <h2>Admin Panel</h2>
     <div class="d-flex">
       <button @click="goToWebsite" class="button button--primary button--icon mr-2">
@@ -11,17 +19,26 @@
     </div>
   </div>
   <div class="d-flex">
-    <div class="admin__sidemenu">
-      <!-- Language Picker -->
+    <!-- Language Picker -->
+    <div :class="{ shrinked: !isSidemenuOpened }" class="admin__sidemenu p-absolute">
       <language-picker :isSaveButtonDisabled="isSaveButtonDisabled" @disable-save="onDisableSave" />
     </div>
-    <div class="d-flex-col w-100">
+    <div
+      :class="{ shrinked: !isSidemenuOpened }"
+      class="admin__tabs-wrapper d-flex-col p-relative w-100"
+    >
       <!-- Tabs -->
       <div class="admin__tabs d-flex justify-sb align-center w-100 px-4 py-5">
         <div
           v-for="(tab, index) in tabs"
           :key="index"
-          :class="['tab', { active: isSelectedTab(tab.label) }]"
+          :class="[
+            'tab',
+            {
+              active: isSelectedTab(tab.label),
+              'unsaved-changes': !isSaveButtonDisabled && tab.label === 'Content',
+            },
+          ]"
           @click="navigateTo(tab.route)"
           class="admin__tab-item d-flex align-center p-relative px-5 py-3"
         >
@@ -29,7 +46,7 @@
           <span class="material-symbols-outlined">{{ tab.icon }}</span>
         </div>
       </div>
-      <!-- Header -->
+      <!-- Content Header -->
       <div class="admin__save-button d-flex justify-sb align-center p-relative px-4">
         <div>
           Editing content for:
@@ -53,9 +70,11 @@
       </router-view>
     </div>
   </div>
+  <!-- Modal -->
   <div class="modal p-absolute w-100 h-100">
     <modal />
   </div>
+  <!-- Notification -->
   <div class="notification p-absolute">
     <notification />
   </div>
@@ -67,7 +86,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '../../stores/auth'
 import { useLocalizationStore } from '../../stores/localization'
 import { deepEqual } from '../../helpers/helper-functions'
-import type { Content, Video, Language } from '../../types/content'
+import type { Content, Language } from '../../types/content'
 import LanguagePicker from './language-picker/LanguagePicker.vue'
 import Modal from './shared/modal/Modal.vue'
 import Notification from './shared/notification/Notification.vue'
@@ -86,6 +105,7 @@ export default defineComponent({
     const contentCopy = ref(Object.freeze({}))
     const isSaveButtonDisabled = ref(true)
     const isNewVideoAdded = ref(false)
+    const isSidemenuOpened = ref(true)
     const activeTab = ref(0)
     const tabs = ref([
       { label: 'Content', icon: 'description', route: '/admin/content' },
@@ -164,6 +184,10 @@ export default defineComponent({
       isSaveButtonDisabled.value = value
     }
 
+    const toggleSidemenu = () => {
+      isSidemenuOpened.value = !isSidemenuOpened.value
+    }
+
     watch(
       () => localizationStore.selectedLanguage,
       () => {
@@ -179,6 +203,7 @@ export default defineComponent({
       language,
       content,
       isSaveButtonDisabled,
+      isSidemenuOpened,
       isSelectedTab,
       navigateTo,
       logout,
@@ -186,6 +211,7 @@ export default defineComponent({
       updateContent,
       saveContent,
       onDisableSave,
+      toggleSidemenu,
     }
   },
 })

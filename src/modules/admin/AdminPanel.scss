@@ -1,9 +1,39 @@
 @import '../../styles/variables';
 
+$left-side-width: 320px;
+
 .admin {
   &__header {
     background-color: $primary-theme-color1;
     box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.2);
+
+    .sidemenu-close {
+      left: 306px;
+      top: 146px;
+      width: 30px;
+      height: 30px;
+      background-color: $white-color;
+      border-radius: 50%;
+      z-index: 10;
+      cursor: pointer;
+      transform: rotateY(0);
+      transition: all 0.25s ease-in-out 0.025s;
+
+      &:hover {
+        box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.5);
+      }
+
+      span {
+        position: relative;
+        right: -1px;
+        user-select: none;
+      }
+
+      &.shrinked {
+        left: 10px;
+        transform: rotateY(180deg);
+      }
+    }
 
     button {
       width: 160px;
@@ -12,6 +42,12 @@
 
   &__sidemenu {
     height: calc(100vh - $header-height);
+    transform: translateX(0);
+    transition: all 0.15s ease-in-out;
+
+    &.shrinked {
+      transform: translateX(-$left-side-width);
+    }
   }
 
   &__save-button {
@@ -28,6 +64,18 @@
       background-color: $green-color;
       color: $white-color;
       border-radius: $default-border-radius;
+    }
+  }
+
+  &__tabs-wrapper {
+    left: $left-side-width;
+    width: calc(100% - $left-side-width);
+    transform: translateX(0);
+    transition: all 0.15s ease-in-out;
+
+    &.shrinked {
+      width: 100%;
+      transform: translateX(-$left-side-width);
     }
   }
 
@@ -51,13 +99,27 @@
       color: $green-color;
       border-bottom: 4px solid $green-color;
     }
+
+    // &.unsaved-changes {
+    //   position: relative;
+
+    //   &:after {
+    //     content: '';
+    //     display: block;
+    //     position: absolute;
+    //     left: calc(100% - 14px);
+    //     width: 12px;
+    //     height: 12px;
+    //     background-color: $red-color;
+    //     border-radius: 50%;
+    //   }
+    // }
   }
 }
 
 .modal {
   top: 0;
   left: 0;
-  // z-index: 20;
   pointer-events: none;
 }
 
