@@ -14,12 +14,12 @@
           ></textarea>
         </div>
         <div class="content__item d-flex-col justify-sb mb-3">
-          <div class="label mb-1">About Us</div>
+          <div class="label mb-1">Subheading</div>
           <textarea
             class="textarea"
-            rows="8"
-            v-model="contentData.header.aboutUs"
-            @input="updateContent('HEADER_ABOUT_US', contentData.header.aboutUs)"
+            rows="4"
+            v-model="contentData.header.subheading"
+            @input="updateContent('HEADER_SUBHEADING', contentData.header.subheading)"
           ></textarea>
         </div>
       </div>
@@ -45,7 +45,24 @@
       <!-- About Us -->
       <div class="content__section p-4 mb-5">
         <h2 class="mb-5">About Us</h2>
-        <div class="content__item d-flex-col justify-sb mb-4"></div>
+        <div class="content__item d-flex-col justify-sb mb-4">
+          <div class="label mb-1">Heading</div>
+          <textarea
+            class="textarea"
+            rows="1"
+            v-model="contentData.aboutUs.heading"
+            @input="updateContent('ABOUT_US_HEADING', contentData.aboutUs.heading)"
+          ></textarea>
+        </div>
+        <div class="content__item d-flex-col justify-sb mb-3">
+          <div class="label mb-1">Content</div>
+          <textarea
+            class="textarea"
+            rows="8"
+            v-model="contentData.aboutUs.content"
+            @input="updateContent('ABOUT_US_CONTENT', contentData.aboutUs.content)"
+          ></textarea>
+        </div>
       </div>
     </div>
   </div>
@@ -64,11 +81,11 @@ export default defineComponent({
   setup(props, { emit }) {
     const contentData = ref<Content>()
 
-    const mapContent = (newContent) => {
+    const mapContent = (newContent: any) => {
       contentData.value = {
         header: {
           heading: newContent?.HEADER_HEADING || '',
-          aboutUs: newContent?.HEADER_ABOUT_US || '',
+          subheading: newContent?.HEADER_SUBHEADING || '',
         },
         navigation: [
           { label: 'Home', value: newContent?.NAVIGATION_HOME || '' },
@@ -77,6 +94,10 @@ export default defineComponent({
           { label: 'Artists', value: newContent?.NAVIGATION_ARTISTS || '' },
           { label: 'Contact', value: newContent?.NAVIGATION_CONTACT || '' },
         ],
+        aboutUs: {
+          heading: newContent?.ABOUT_US_HEADING || '',
+          content: newContent?.ABOUT_US_CONTENT || '',
+        },
         videos: Array.isArray(newContent?.videos)
           ? newContent.videos.map((video) => ({
               heading: video.heading || '',

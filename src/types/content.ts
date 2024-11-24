@@ -1,7 +1,7 @@
 export type Content = {
   header: {
     heading: string
-    aboutUs: string
+    subheading: string
   }
   navigation: [
     { label: string; value: string },
@@ -10,6 +10,10 @@ export type Content = {
     { label: string; value: string },
     { label: string; value: string },
   ]
+  aboutUs: {
+    heading: string
+    content: any
+  }
   videos: []
 }
 
