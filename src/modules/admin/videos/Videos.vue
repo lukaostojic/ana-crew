@@ -61,7 +61,11 @@ export default defineComponent({
 
     const removeVideo = async (index: number) => {
       const videoToDelete = videos.value[index]
-      if (!videoToDelete?.url) return
+
+      if (!videoToDelete?.url) {
+        videos.value = videos.value.filter((_, i) => i !== index)
+        return
+      }
 
       try {
         await localizationStore.deleteVideo(videoToDelete.url)

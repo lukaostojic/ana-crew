@@ -16,6 +16,15 @@
       background-color: $primary-theme-color3;
       color: $red-color;
     }
+
+    .preview {
+      top: 33px;
+      left: calc(100% - 39px);
+      height: 24px;
+      padding-left: 10px;
+      background-color: $white-color;
+      cursor: pointer;
+    }
   }
 
   &__actions {

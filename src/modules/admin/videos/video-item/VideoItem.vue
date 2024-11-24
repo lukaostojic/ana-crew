@@ -19,6 +19,9 @@
         >
           Please enter a valid URL
         </small>
+        <div class="preview p-absolute">
+          <span class="material-symbols-outlined"> preview </span>
+        </div>
       </div>
       <div class="video-item__actions d-flex p-relative">
         <button
