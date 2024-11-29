@@ -17,6 +17,7 @@
         <VideoItem
           :allVideos="videos"
           :videoData="video"
+          :videoContent="videoContent"
           @update-video="updateVideo(index, $event)"
           @remove-video="removeVideo(index)"
         />
@@ -26,8 +27,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from 'vue'
+import { defineComponent, ref, watch, onMounted } from 'vue'
 import { useLocalizationStore } from '../../../stores/localization'
+import { useVideosStore } from '../../../stores/videos'
 import VideoItem from './video-item/VideoItem.vue'
 import type { Video } from '../../../types/content'
 
@@ -39,46 +41,77 @@ export default defineComponent({
   emits: ['update-content'],
   setup(props, { emit }) {
     const localizationStore = useLocalizationStore()
-    const videos = ref([...(props.content?.videos || [])])
+    const videosStore = useVideosStore()
+    const videos = ref([])
+    const videoContent = ref()
     const isNewVideoAdded = ref(false)
 
     watch(
       () => props.content?.videos,
       (newVideos) => {
-        videos.value = [...(newVideos || [])]
+        videoContent.value = [...(newVideos || [])]
       },
     )
 
     const addNewVideo = () => {
-      const newVideos = [{ heading: '', description: '', url: '' }, ...videos.value]
+      const newVideos = [{ heading: '', description: '' }, ...videos.value]
       isNewVideoAdded.value = true
       emit('update-content', { videos: newVideos })
     }
 
-    const updateVideo = (index: number, updatedData: any) => {
-      const newVideos = [...videos.value]
-      newVideos[index] = updatedData
+    const updateVideo = (index: number, updatedContent: any) => {
+      const newVideos = [...videoContent.value]
+      newVideos[index] = updatedContent
       emit('update-content', { videos: newVideos })
+      console.log('from videos', newVideos)
     }
+
+    // const updateVideo = (index: number, updatedData: any) => {
+    // const newVideos = [...videos.value]
+    // const videoToUpdate = newVideos[index]
+    // console.log(updatedData)
+    // newVideos[index] = {
+    //   ...videoToUpdate,
+    //   heading: updatedData.heading,
+    //   description: updatedData.description,
+    // }
+    // const videoId = updatedData.videoId
+    // if (videos.value[videoId]?.url !== updatedData.url) {
+    //   videos.value[videoId] = { ...videos.value[videoId], url: updatedData.url }
+    // }
+    // emit('update-content', { videos: newVideos })
+    // }
 
     const removeVideo = async (index: number) => {
-      const videoToDelete = videos.value[index]
-
-      if (!videoToDelete?.url) {
-        videos.value = videos.value.filter((_, i) => i !== index)
-        return
-      }
-
-      try {
-        await localizationStore.deleteVideo(videoToDelete.url)
-        videos.value = videos.value.filter((_, i) => i !== index)
-      } catch (error) {
-        console.error('Failed to delete video:', error)
-      }
+      // const videoToDelete = videos.value[index]
+      // if (!videoToDelete?.url) {
+      //   videos.value = videos.value.filter((_, i) => i !== index)
+      //   return
+      // }
+      // try {
+      //   await videosStore.deleteVideo(videoToDelete.url)
+      //   videos.value = videos.value.filter((_, i) => i !== index)
+      // } catch (error) {
+      //   console.error('Failed to delete video:', error)
+      // }
     }
+
+    watch(
+      () => videosStore.allVideos,
+      () => {
+        videos.value = videosStore.allVideos
+      },
+      { deep: true },
+    )
+
+    onMounted(() => {
+      videosStore.getAllVideos()
+      // videos.value = videosStore.allVideos
+    })
 
     return {
       videos,
+      videoContent,
       addNewVideo,
       updateVideo,
       removeVideo,

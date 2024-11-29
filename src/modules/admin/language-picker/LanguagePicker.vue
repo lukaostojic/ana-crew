@@ -71,6 +71,7 @@ import { useLocalizationStore } from '../../../stores/localization'
 import { useModalStore } from '../../../stores/modal'
 import { languages as allLanguages } from '../../../config/languages'
 import type { Language } from '../../../services/language.service'
+import type { Video } from '../../../types/content'
 
 export default defineComponent({
   name: 'CustomLanguageDropdown',
@@ -139,6 +140,7 @@ export default defineComponent({
       if (!props.isSaveButtonDisabled) {
         const message = `All new data you have filled in for the <strong>${selectedLanguage.value?.name}</strong> language will be lost. <br><br> Proceed anyway?`
         const isConfirmed = await modalStore.showConfirmationModal(message)
+        localizationStore.setVideoContent([])
 
         if (isConfirmed) {
           changeLanguage(language)

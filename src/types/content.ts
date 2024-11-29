@@ -18,9 +18,9 @@ export type Content = {
 }
 
 export type Video = {
-  heading: ''
-  description: ''
-  url: ''
+  videoId?: string
+  heading?: ''
+  description?: ''
 }
 
 export interface Language {
