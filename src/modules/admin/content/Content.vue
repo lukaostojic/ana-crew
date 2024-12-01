@@ -98,13 +98,7 @@ export default defineComponent({
           heading: newContent?.ABOUT_US_HEADING || '',
           content: newContent?.ABOUT_US_CONTENT || '',
         },
-        videos: Array.isArray(newContent?.videos)
-          ? newContent.videos.map((video) => ({
-              heading: video.heading || '',
-              url: video.url || '',
-              description: video.description || '',
-            }))
-          : [],
+        videos: newContent?.videos || [],
       }
     }
 

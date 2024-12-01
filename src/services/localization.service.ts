@@ -10,28 +10,21 @@ export const fetchLocalizationContent = async (
   const langDocRef = doc(db, 'content', languageCode)
   const langDocSnap = await getDoc(langDocRef)
 
-  if (langDocSnap.exists()) {
-    return langDocSnap.data() as Record<string, string>
-  }
-  console.log(`No content found for language: ${languageCode}`)
-  return {}
+  return langDocSnap.data() as Record<string, string>
 }
 
 export const updateLocalizationContent = async (
   languageCode: string,
   content: any,
-  isVideoContent: boolean,
 ): Promise<void> => {
   const langDocRef = doc(db, 'content', languageCode)
   await updateDoc(langDocRef, content)
 
   const notificationStore = useNotificationStore()
   const localizationStore = useLocalizationStore()
-  isVideoContent
-    ? notificationStore.setNotification('New video successfully added')
-    : notificationStore.setNotification(
-        `Content for <strong>${localizationStore.selectedLanguage?.name}</strong> language has been updated.`,
-      )
+  notificationStore.setNotification(
+    `Content for <strong>${localizationStore.selectedLanguage?.name}</strong> language has been updated.`,
+  )
 }
 
 export const addNewLanguageContent = async (languageCode: string): Promise<void> => {

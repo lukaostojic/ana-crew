@@ -140,7 +140,6 @@ export default defineComponent({
       if (!props.isSaveButtonDisabled) {
         const message = `All new data you have filled in for the <strong>${selectedLanguage.value?.name}</strong> language will be lost. <br><br> Proceed anyway?`
         const isConfirmed = await modalStore.showConfirmationModal(message)
-        localizationStore.setVideoContent([])
 
         if (isConfirmed) {
           changeLanguage(language)

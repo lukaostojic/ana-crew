@@ -104,7 +104,6 @@ export default defineComponent({
     const content = ref<Content>()
     const contentCopy = ref(Object.freeze({}))
     const isSaveButtonDisabled = ref(true)
-    // const isNewVideoAdded = ref(false)
     const isSidemenuOpened = ref(true)
     const activeTab = ref(0)
     const tabs = ref([
@@ -137,45 +136,21 @@ export default defineComponent({
       contentCopy.value = Object.freeze(JSON.parse(JSON.stringify(content.value)))
     }
 
-    const updateContent = (updatedContent: any) => {
-      const isOnVideosRoute = route.name === 'Videos'
-      const hasEmptyUrl =
-        Array.isArray(updatedContent.videos) &&
-        updatedContent.videos.some((video: any) => !video.videoId || video.videoId === '')
-
-      content.value = {
+    const updateContent = (updatedContent: Content) => {
+      localizationStore.content = {
         ...content.value,
         ...updatedContent,
       }
 
-      if (isOnVideosRoute && updatedContent.videos && hasEmptyUrl) {
-        isSaveButtonDisabled.value = true
-        // isNewVideoAdded.value = true
-      } else if (deepEqual(content.value, contentCopy.value)) {
+      if (deepEqual(localizationStore.content, contentCopy.value)) {
         isSaveButtonDisabled.value = true
       } else {
         isSaveButtonDisabled.value = false
       }
-      console.log('from admin panel', updatedContent)
     }
 
     const saveContent = async () => {
-      const currentLanguage = localizationStore.selectedLanguage?.code
-
-      localizationStore.content = {
-        ...content.value,
-        videos: Array.isArray(content.value?.videos) ? content.value.videos : [],
-      }
-
-      localizationStore.videoContent = Array.isArray(content.value?.videos)
-        ? content.value.videos
-        : []
-
       await localizationStore.saveLocalizationContent()
-
-      // if (currentLanguage && isNewVideoAdded.value) {
-      //   await localizationStore.saveVideoContent(currentLanguage)
-      // }
 
       contentCopy.value = Object.freeze(JSON.parse(JSON.stringify(content.value)))
       isSaveButtonDisabled.value = true
@@ -217,8 +192,6 @@ export default defineComponent({
   },
 })
 
-// ++ Set videos placeholder on new language addition (prevent populating video data with the data from the selected language)
-// ++ When changing url in one language, video data gets deleted in all other languages (url is updated properly)
 // When removing a language, that language isn't available in all languages array (until refresh)
 
 // Implement Quill editor for About Us section

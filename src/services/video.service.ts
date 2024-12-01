@@ -25,3 +25,14 @@ export const addNewVideo = async (id: string, url: string) => {
     throw error
   }
 }
+
+export const updateExistingVideo = async (id: string, url: string) => {
+  try {
+    const videoRef = doc(db, 'videos', id)
+    await updateDoc(videoRef, { url })
+    console.log(`Video with ID ${id} updated successfully.`)
+  } catch (error) {
+    console.error('Error updating video:', error)
+    throw error
+  }
+}
