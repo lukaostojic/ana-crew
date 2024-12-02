@@ -34,6 +34,12 @@
 
   &--secondary {
     background-color: $secondary-button-color;
+    color: $white-color;
+  }
+
+  &--ternary {
+    background-color: $primary-theme-color1;
+    color: $primary-text-color;
   }
 
   &--danger {

@@ -55,7 +55,7 @@
         <button
           :disabled="isSaveButtonDisabled"
           :class="{ disabled: isSaveButtonDisabled }"
-          class="button button--primary button--icon p-relative"
+          class="button button--ternary button--icon p-relative"
           @click="saveContent()"
         >
           <span>Save</span>
@@ -191,10 +191,12 @@ export default defineComponent({
     }
   },
 })
-
+// Video data add, update, remove (alse delete video content from db)
+// When deleting a language, chosen language in the header gets removed
 // When removing a language, that language isn't available in all languages array (until refresh)
 
 // Implement Quill editor for About Us section
+// Add blue borer on fields that are updated before save
 </script>
 
 <style lang="scss" scoped src="./AdminPanel.scss"></style>

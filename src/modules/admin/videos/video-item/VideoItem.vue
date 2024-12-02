@@ -1,5 +1,5 @@
 <template>
-  <div class="video-item__wrapper d-flex-col p-4">
+  <div class="video-item__wrapper p-relative d-flex-col p-4">
     <h2 v-if="videoContentCopy.heading?.length" class="mb-5">{{ videoContentCopy.heading }}</h2>
     <h2 v-else class="mb-5">Title</h2>
     <div class="video-item__url d-flex justify-sb pb-4 mb-4">
@@ -31,7 +31,7 @@
           @click="updateVideoData"
           :disabled="isSaveButtonDisabled"
           :class="{ disabled: isSaveButtonDisabled }"
-          class="button button--primary button--icon mr-2"
+          class="button button--secondary button--icon mr-2"
         >
           <span>Save</span>
           <span class="material-symbols-outlined"> check </span>

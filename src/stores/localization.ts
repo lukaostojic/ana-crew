@@ -31,7 +31,6 @@ export const useLocalizationStore = defineStore('localization', () => {
   const loadLocalizationContent = async () => {
     if (selectedLanguage.value?.code) {
       const data: Record<string, any> = await fetchLocalizationContent(selectedLanguage.value.code)
-      console.log(data)
       if (!data.videos) {
         data.videos = []
       }

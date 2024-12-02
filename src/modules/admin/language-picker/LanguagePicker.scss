@@ -88,7 +88,7 @@ $container-width: 320px;
     }
 
     &.selected {
-      border: 2px solid $border-color-dark;
+      border: 2px solid $green-color;
     }
 
     .language-label {
@@ -131,7 +131,7 @@ $container-width: 320px;
     }
 
     .default-icon {
-      color: $blue-color;
+      color: $primary-button-color;
       z-index: 5;
     }
   }

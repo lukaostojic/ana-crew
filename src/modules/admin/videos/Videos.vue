@@ -1,7 +1,7 @@
 <template>
   <div class="videos__wrapper px-4">
     <div class="videos__add-button d-flex justify-end align-center p-relative">
-      <button @click="addNewVideo" class="button button--primary button--icon p-absolute add">
+      <button @click="addNewVideo" class="button button--secondary button--icon p-absolute add">
         <span>Add Video</span>
         <span class="material-symbols-outlined"> add </span>
       </button>
