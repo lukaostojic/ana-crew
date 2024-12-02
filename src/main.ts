@@ -15,8 +15,8 @@ app.use(pinia)
 
 app.component('QuillEditor', QuillEditor)
 
-const authStore = useAuthStore(pinia)
-await authStore.fetchUser()
+// const authStore = useAuthStore(pinia)
+// await authStore.fetchUser()
 
 app.use(router)
 app.mount('#app')
