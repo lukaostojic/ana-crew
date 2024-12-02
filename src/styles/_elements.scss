@@ -4,10 +4,10 @@
   outline: none;
   border: none;
   cursor: pointer;
-  transition: all 0.25s ease-in-out;
+  transition: $default-transition;
 
   &.disabled {
-    opacity: 0.4;
+    opacity: 0.5;
     cursor: auto;
     filter: brightness(1) !important;
   }
