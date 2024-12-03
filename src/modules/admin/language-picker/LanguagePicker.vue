@@ -138,7 +138,7 @@ export default defineComponent({
 
     const handleLanguageClick = async (language: Language) => {
       if (!props.isSaveButtonDisabled) {
-        const message = `All new data entered for the <strong>${selectedLanguage.value?.name}</strong> language will be discarded. <br><br> Proceed anyway?`
+        const message = `All newly entered data for the <strong>${selectedLanguage.value?.name}</strong> language will be discarded. <br><br> Proceed anyway?`
         const isConfirmed = await modalStore.showConfirmationModal(message)
 
         if (isConfirmed) {
