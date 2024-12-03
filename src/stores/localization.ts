@@ -24,7 +24,7 @@ export const useLocalizationStore = defineStore('localization', () => {
     availableLanguages.value = languages
   }
 
-  const setLocalizationContent = (content) => {
+  const setLocalizationContent = (content: any) => {
     content.value = content
   }
 

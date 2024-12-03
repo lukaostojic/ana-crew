@@ -1,5 +1,7 @@
 @import '../../../../styles/variables';
 
+$video-height: 200px;
+
 .video-item {
   &__wrapper {
     background-color: $primary-theme-color3;
@@ -12,28 +14,17 @@
       position: absolute;
       top: 0;
       left: -4px;
-      height: 150px;
+      height: calc(150px + $video-height);
       border-left: 4px solid $blue-color;
       border-top-left-radius: $default-border-radius;
     }
   }
 
   &__url {
-    border-bottom: 1px solid $border-color-light;
-
     small.error-text {
       top: 68px;
       background-color: $primary-theme-color3;
       color: $red-color;
-    }
-
-    .preview {
-      top: 34px;
-      left: calc(100% - 39px);
-      height: 24px;
-      padding-left: 10px;
-      background-color: $white-color;
-      cursor: pointer;
     }
   }
 
@@ -49,6 +40,23 @@
         opacity: 0.5;
         pointer-events: none;
       }
+    }
+  }
+
+  &__preview {
+    border-bottom: 1px solid $border-color-light;
+
+    .no-preview {
+      height: calc($video-height - 16px);
+
+      .no-video {
+        font-size: 40px;
+      }
+    }
+
+    iframe {
+      width: 100%;
+      height: calc($video-height - 20px);
     }
   }
 }

@@ -138,7 +138,7 @@ export default defineComponent({
 
     const handleLanguageClick = async (language: Language) => {
       if (!props.isSaveButtonDisabled) {
-        const message = `All new data you have filled in for the <strong>${selectedLanguage.value?.name}</strong> language will be lost. <br><br> Proceed anyway?`
+        const message = `All new data entered for the <strong>${selectedLanguage.value?.name}</strong> language will be discarded. <br><br> Proceed anyway?`
         const isConfirmed = await modalStore.showConfirmationModal(message)
 
         if (isConfirmed) {
@@ -154,7 +154,7 @@ export default defineComponent({
     }
 
     const deleteLanguage = async (language: Language) => {
-      const message = `Are you sure you want to delete content for <br><strong>${language.name}</strong>?`
+      const message = `Are you sure you want to delete all the content for <strong>${language.name}</strong>? <br><br>This action cannot be undone.`
       const isConfirmed = await modalStore.showConfirmationModal(message)
 
       if (isConfirmed) {

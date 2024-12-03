@@ -2,7 +2,7 @@
   <div class="video-item__wrapper p-relative d-flex-col p-4">
     <h2 v-if="videoContentCopy.heading?.length" class="mb-5">{{ videoContentCopy.heading }}</h2>
     <h2 v-else class="mb-5">Title</h2>
-    <div class="video-item__url d-flex justify-sb pb-4 mb-4">
+    <div class="video-item__url d-flex justify-sb pb-4">
       <!-- Video URL Input -->
       <div class="d-flex-col p-relative w-100 mr-4">
         <label class="mb-1">Video URL</label>
@@ -21,9 +21,6 @@
         >
           This URL is already in use
         </small>
-        <div class="preview p-absolute">
-          <span class="material-symbols-outlined"> visibility </span>
-        </div>
       </div>
       <!-- Actions -->
       <div class="video-item__actions d-flex p-relative">
@@ -42,11 +39,26 @@
         </button>
       </div>
     </div>
-
+    <!-- Video Preview -->
+    <div class="video-item__preview mb-3 pb-4">
+      <div
+        v-if="!isYouTubeUrl(videoData.url)"
+        class="no-preview d-flex justify-center align-center"
+      >
+        <span class="material-symbols-outlined no-video"> video_camera_front_off </span>
+      </div>
+      <iframe
+        v-if="isUrlValid && isYouTubeUrl(videoData.url)"
+        :src="embedUrl"
+        class="video-iframe"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+      ></iframe>
+    </div>
     <!-- Heading Input -->
     <label class="mb-1">Heading</label>
     <input v-model="videoContentCopy.heading" @input="updateVideoContent" class="input mb-4" />
-
     <!-- Description Textarea -->
     <label class="mb-1">Description</label>
     <textarea
@@ -62,7 +74,7 @@
 import { defineComponent, ref, watch, computed } from 'vue'
 import type { PropType } from 'vue'
 import { isValidURL } from '../../../../helpers/helper-functions'
-import { useLocalizationStore } from '../../../../stores/localization'
+import { useModalStore } from '../../../../stores/modal'
 import type { VideoData, VideoContent } from '../../../../types/content'
 
 export default defineComponent({
@@ -81,7 +93,7 @@ export default defineComponent({
   },
   emits: ['update-video-data', 'update-video-content', 'remove-video'],
   setup(props, { emit }) {
-    const localizationStore = useLocalizationStore()
+    const modalStore = useModalStore()
     const videoDataCopy = ref<VideoData>({ ...props.videoData })
     const videoContentCopy = ref<VideoContent>({ ...props.videoContent })
     const isUrlValid = ref(true)
@@ -93,6 +105,20 @@ export default defineComponent({
         ? { green: 'Save', red: 'Cancel' }
         : { green: 'Update', red: 'Delete' }
     })
+
+    const embedUrl = computed(() => {
+      const url = props.videoData.url
+      const youtubeMatch = url.match(/(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([^&]+)/)
+
+      if (youtubeMatch) {
+        return `https://www.youtube.com/embed/${youtubeMatch[1]}`
+      }
+      return ''
+    })
+
+    const isYouTubeUrl = (url: string) => {
+      return /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=/.test(url)
+    }
 
     const checkSaveButtonState = () => {
       isSaveButtonDisabled.value =
@@ -106,6 +132,7 @@ export default defineComponent({
 
     const updateVideoData = () => {
       videoDataCopy.value.url = props.videoData.url
+      isSaveButtonDisabled.value = true
       emit('update-video-data', videoDataCopy.value)
     }
 
@@ -113,8 +140,15 @@ export default defineComponent({
       emit('update-video-content', videoContentCopy.value)
     }
 
-    const removeVideo = () => {
-      emit('remove-video', videoDataCopy.value.id)
+    const removeVideo = async () => {
+      const message = props.isNewVideo
+        ? `Are you sure you want to discard all the changes?`
+        : `Are you sure you want to delete this video and its content for all the languages? <br><br>This action cannot be undone.`
+      const isConfirmed = await modalStore.showConfirmationModal(message)
+
+      if (isConfirmed) {
+        emit('remove-video', videoDataCopy.value.id)
+      }
     }
 
     watch(
@@ -143,10 +177,12 @@ export default defineComponent({
       isDuplicateUrlError,
       isSaveButtonDisabled,
       videoLabels,
+      embedUrl,
       validateUrl,
       updateVideoData,
       updateVideoContent,
       removeVideo,
+      isYouTubeUrl,
     }
   },
 })

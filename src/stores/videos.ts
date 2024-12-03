@@ -19,7 +19,6 @@ export const useVideosStore = defineStore('videos', () => {
     try {
       await addNewVideo(id, url)
       allVideos.value.push({ id, url })
-      console.log(`Video added to store: ${id}`)
     } catch (error) {
       console.error('Failed to add video:', error)
       throw error
@@ -31,8 +30,7 @@ export const useVideosStore = defineStore('videos', () => {
       await updateExistingVideo(videoData.videoId, videoData.url)
       const videoIndex = allVideos.value.findIndex((video) => video.id === videoData.videoId)
       if (videoIndex > -1) {
-        allVideos.value[videoIndex].url = videoData.url // Update store
-        console.log(`Video with ID ${videoData.videoId} updated in store.`)
+        allVideos.value[videoIndex].url = videoData.url
       }
     } catch (error) {
       console.error('Failed to update video:', error)
