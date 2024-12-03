@@ -1,5 +1,6 @@
 import { db } from '../config/firebase'
 import { getDocs, collection, setDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore'
+import { useNotificationStore } from '@/stores/notification'
 
 export const fetchAllVideos = async () => {
   try {
@@ -19,7 +20,9 @@ export const addNewVideo = async (id: string, url: string) => {
   try {
     const videoRef = doc(db, 'videos', id)
     await setDoc(videoRef, { url })
-    console.log('Video added successfully:', url)
+
+    const notificationStore = useNotificationStore()
+    notificationStore.setNotification('New video added successfully')
   } catch (error) {
     console.error('Error adding video:', error)
     throw error
@@ -30,9 +33,38 @@ export const updateExistingVideo = async (id: string, url: string) => {
   try {
     const videoRef = doc(db, 'videos', id)
     await updateDoc(videoRef, { url })
-    console.log(`Video with ID ${id} updated successfully.`)
+
+    const notificationStore = useNotificationStore()
+    notificationStore.setNotification('Video has been updated')
   } catch (error) {
     console.error('Error updating video:', error)
+    throw error
+  }
+}
+
+export const removeVideo = async (id: string) => {
+  try {
+    const videoRef = doc(db, 'videos', id)
+    await deleteDoc(videoRef)
+
+    const languagesSnapshot = await getDocs(collection(db, 'content'))
+    const languages = languagesSnapshot.docs.map((doc) => doc.id)
+
+    for (const language of languages) {
+      const videosRef = collection(db, 'content', language, 'videos')
+      const querySnapshot = await getDocs(videosRef)
+      const videosToDelete = querySnapshot.docs.filter((doc) => doc.data().videoId === id)
+
+      for (const videoDoc of videosToDelete) {
+        await deleteDoc(doc(db, 'content', language, 'videos', videoDoc.id))
+        console.log(`Deleted video content for language: ${language}`)
+      }
+    }
+
+    const notificationStore = useNotificationStore()
+    notificationStore.setNotification('Video has been deleted')
+  } catch (error) {
+    console.error('Error deleting video and content:', error)
     throw error
   }
 }

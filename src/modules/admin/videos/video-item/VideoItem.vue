@@ -33,11 +33,11 @@
           :class="{ disabled: isSaveButtonDisabled }"
           class="button button--secondary button--icon mr-2"
         >
-          <span>Save</span>
+          <span>{{ videoLabels.green }}</span>
           <span class="material-symbols-outlined"> check </span>
         </button>
         <button @click="removeVideo" class="button button--danger button--icon">
-          <span>Remove</span>
+          <span>{{ videoLabels.red }}</span>
           <span class="material-symbols-outlined"> delete </span>
         </button>
       </div>
@@ -59,36 +59,62 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from 'vue'
+import { defineComponent, ref, watch, computed } from 'vue'
 import type { PropType } from 'vue'
 import { isValidURL } from '../../../../helpers/helper-functions'
 import { useLocalizationStore } from '../../../../stores/localization'
+import type { VideoData, VideoContent } from '../../../../types/content'
 
 export default defineComponent({
+  name: 'VideoItem',
   props: {
     allVideos: Array,
-    videoData: { type: Object, required: true },
-    videoContent: { type: Object, required: true },
+    isNewVideo: Boolean,
+    videoData: {
+      type: Object as PropType<VideoData>,
+      required: true,
+    },
+    videoContent: {
+      type: Object as PropType<VideoContent>,
+      required: true,
+    },
   },
   emits: ['update-video-data', 'update-video-content', 'remove-video'],
   setup(props, { emit }) {
     const localizationStore = useLocalizationStore()
-    const videoDataCopy = ref({ ...props.videoData })
-    const videoContentCopy = ref({ ...props.videoContent })
+    const videoDataCopy = ref<VideoData>({ ...props.videoData })
+    const videoContentCopy = ref<VideoContent>({ ...props.videoContent })
     const isUrlValid = ref(true)
     const isDuplicateUrlError = ref(false)
     const isSaveButtonDisabled = ref(true)
 
-    const validateUrl = () => {}
+    const videoLabels = computed(() => {
+      return props.isNewVideo
+        ? { green: 'Save', red: 'Cancel' }
+        : { green: 'Update', red: 'Delete' }
+    })
 
-    const updateVideoData = () => {}
+    const checkSaveButtonState = () => {
+      isSaveButtonDisabled.value =
+        videoDataCopy.value.url.trim() === props.videoData.url.trim() || !isUrlValid.value
+    }
+
+    const validateUrl = () => {
+      isUrlValid.value = isValidURL(props.videoData.url)
+      checkSaveButtonState()
+    }
+
+    const updateVideoData = () => {
+      videoDataCopy.value.url = props.videoData.url
+      emit('update-video-data', videoDataCopy.value)
+    }
 
     const updateVideoContent = () => {
       emit('update-video-content', videoContentCopy.value)
     }
 
     const removeVideo = () => {
-      emit('remove-video')
+      emit('remove-video', videoDataCopy.value.id)
     }
 
     watch(
@@ -99,12 +125,24 @@ export default defineComponent({
       { deep: true, immediate: true },
     )
 
+    watch(
+      () => props.videoData,
+      (newVal) => {
+        if (videoDataCopy.value.url === props.videoData.url && props.isNewVideo) {
+          videoDataCopy.value = { ...newVal }
+        }
+        checkSaveButtonState()
+      },
+      { deep: true, immediate: true },
+    )
+
     return {
       videoDataCopy,
       videoContentCopy,
       isUrlValid,
       isDuplicateUrlError,
       isSaveButtonDisabled,
+      videoLabels,
       validateUrl,
       updateVideoData,
       updateVideoContent,

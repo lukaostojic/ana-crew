@@ -17,7 +17,12 @@ export type Content = {
   videos: []
 }
 
-export type Video = {
+export type VideoData = {
+  id: string
+  url: string
+}
+
+export type VideoContent = {
   videoId?: string
   heading?: ''
   description?: ''

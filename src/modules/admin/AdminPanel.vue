@@ -93,7 +93,7 @@ import Notification from './shared/notification/Notification.vue'
 
 export default defineComponent({
   components: { LanguagePicker, Modal, Notification },
-  name: 'Admin Panel',
+  name: 'AdminPanel',
   setup() {
     const router = useRouter()
     const route = useRoute()
@@ -191,12 +191,11 @@ export default defineComponent({
     }
   },
 })
-// Video data add, update, remove (alse delete video content from db)
+// When adding video, video content for all languages should be updated with empty strings, excempt for the active language, if there is content
 // When deleting a language, chosen language in the header gets removed
 // When removing a language, that language isn't available in all languages array (until refresh)
 
 // Implement Quill editor for About Us section
-// Add blue borer on fields that are updated before save
 </script>
 
 <style lang="scss" scoped src="./AdminPanel.scss"></style>

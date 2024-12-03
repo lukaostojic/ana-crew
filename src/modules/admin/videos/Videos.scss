@@ -25,6 +25,16 @@
     height: calc(100vh - 232px);
     overflow-y: auto;
 
+    .list-item {
+      transition: $default-transition;
+
+      &.disabled {
+        filter: blur(1px);
+        opacity: 0.5;
+        pointer-events: none;
+      }
+    }
+
     @media (max-width: 1200px) {
       grid-template-columns: repeat(1, 1fr);
     }

@@ -7,7 +7,7 @@ import {
   deleteLanguageContent,
 } from '../services/localization.service'
 import type { Language } from '@/services/language.service'
-import type { Content, Video } from '@/types/content'
+import type { Content, VideoContent } from '@/types/content'
 
 export const useLocalizationStore = defineStore('localization', () => {
   const selectedLanguage = ref<Language | null>({ code: 'en', name: 'English' })

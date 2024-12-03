@@ -71,7 +71,7 @@ import { useLocalizationStore } from '../../../stores/localization'
 import { useModalStore } from '../../../stores/modal'
 import { languages as allLanguages } from '../../../config/languages'
 import type { Language } from '../../../services/language.service'
-import type { Video } from '../../../types/content'
+import type { VideoContent } from '../../../types/content'
 
 export default defineComponent({
   name: 'CustomLanguageDropdown',

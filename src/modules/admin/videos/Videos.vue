@@ -1,7 +1,10 @@
 <template>
   <div class="videos__wrapper px-4">
     <div class="videos__add-button d-flex justify-end align-center p-relative">
-      <button @click="addNewVideo" class="button button--secondary button--icon p-absolute add">
+      <button
+        @click="handleAddNewVideo"
+        class="button button--secondary button--icon p-absolute add"
+      >
         <span>Add Video</span>
         <span class="material-symbols-outlined"> add </span>
       </button>
@@ -21,9 +24,12 @@
           :allVideos="videosData"
           :videoData="videoData"
           :videoContent="videosContent[index]"
+          :isNewVideo="isNewVideo"
           @update-video-data="updateVideoData(index, $event)"
           @update-video-content="updateVideoContent(index, $event)"
-          @remove-video="removeVideo(index)"
+          @remove-video="deleteVideo($event)"
+          :class="{ disabled: isNewVideo && index !== videosData.length - 1 }"
+          class="list-item"
         />
       </div>
     </div>
@@ -34,10 +40,13 @@
 import { defineComponent, ref, watch, onMounted } from 'vue'
 import { useVideosStore } from '../../../stores/videos'
 import { useLocalizationStore } from '../../../stores/localization'
+import { updateExistingVideo, addNewVideo, removeVideo } from '../../../services/video.service'
 import { generateUniqueId } from '../../../helpers/helper-functions'
 import VideoItem from './video-item/VideoItem.vue'
+import type { VideoContent, VideoData } from '../../../types/content'
 
 export default defineComponent({
+  name: 'Videos',
   components: { VideoItem },
   props: {
     content: Object,
@@ -48,22 +57,55 @@ export default defineComponent({
     const localizationStore = useLocalizationStore()
     const videosData = ref<any>([])
     const videosContent = ref<any>({ ...props.content?.videos })
+    const isNewVideo = ref(false)
 
-    const addNewVideo = () => {}
+    const handleAddNewVideo = () => {
+      const videoId = generateUniqueId()
+      const newVideo: VideoData = {
+        id: videoId,
+        url: '',
+      }
 
-    const updateVideoData = (index: number, updatedData: { videoId: string; url: string }) => {}
+      videosData.value.push(newVideo)
+      isNewVideo.value = true
+    }
 
-    const updateVideoContent = (
-      index: number,
-      updatedContent: { videoId: string; heading: string; description: string },
-    ) => {
+    const updateVideoData = async (index: number, updatedData: VideoData) => {
+      if (isNewVideo.value) {
+        try {
+          await addNewVideo(updatedData.id, updatedData.url)
+
+          isNewVideo.value = false
+        } catch (error) {
+          console.error('Failed to add new video:', error)
+        }
+      } else {
+        try {
+          await updateExistingVideo(updatedData.id, updatedData.url)
+
+          videosData.value[index] = updatedData
+        } catch (error) {
+          console.error(`Failed to update video at index ${index}:`, error)
+        }
+      }
+    }
+
+    const updateVideoContent = (index: number, updatedContent: VideoContent) => {
       const videoId = videosData.value[index]?.id
       updatedContent.videoId = videoId
       videosContent.value[index] = updatedContent
       emit('update-content', { videos: videosContent.value })
     }
 
-    const removeVideo = (index: number) => {}
+    const deleteVideo = async (id: string) => {
+      if (isNewVideo.value) {
+        videosData.value = videosData.value.filter((v: VideoData) => v.id !== id)
+        isNewVideo.value = false
+      } else {
+        await removeVideo(id)
+        isNewVideo.value = false
+      }
+    }
 
     watch(
       () => videoStore.allVideos,
@@ -90,10 +132,11 @@ export default defineComponent({
     return {
       videosData,
       videosContent,
-      addNewVideo,
+      isNewVideo,
+      handleAddNewVideo,
       updateVideoData,
       updateVideoContent,
-      removeVideo,
+      deleteVideo,
     }
   },
 })
