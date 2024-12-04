@@ -3,6 +3,7 @@
     <div class="videos__add-button d-flex justify-end align-center p-relative">
       <button
         @click="handleAddNewVideo"
+        :class="{ disabled: isNewVideo }"
         class="button button--secondary button--icon p-absolute add"
       >
         <span>Add Video</span>

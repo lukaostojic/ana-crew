@@ -6,6 +6,11 @@
       right: 168px;
       bottom: 27px;
       width: 160px;
+
+      &.disabled {
+        opacity: 0.5;
+        pointer-events: none;
+      }
     }
   }
 

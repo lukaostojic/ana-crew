@@ -46,8 +46,16 @@ $video-height: 200px;
   &__preview {
     border-bottom: 1px solid $border-color-light;
 
+    &.new-video {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
     .no-preview {
       height: calc($video-height - 16px);
+      border: 1px solid $border-color-light;
+      border-radius: $default-border-radius;
 
       .no-video {
         font-size: 40px;

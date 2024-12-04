@@ -40,7 +40,7 @@
       </div>
     </div>
     <!-- Video Preview -->
-    <div class="video-item__preview mb-3 pb-4">
+    <div class="video-item__preview mb-3 pb-4" :class="{ 'new-video': isNewVideo }">
       <div
         v-if="!isYouTubeUrl(videoData.url)"
         class="no-preview d-flex justify-center align-center"
@@ -56,17 +56,19 @@
         allowfullscreen
       ></iframe>
     </div>
-    <!-- Heading Input -->
-    <label class="mb-1">Heading</label>
-    <input v-model="videoContentCopy.heading" @input="updateVideoContent" class="input mb-4" />
-    <!-- Description Textarea -->
-    <label class="mb-1">Description</label>
-    <textarea
-      v-model="videoContentCopy.description"
-      @input="updateVideoContent"
-      rows="4"
-      class="mb-1 input textarea"
-    ></textarea>
+    <template v-if="!$props.isNewVideo">
+      <!-- Heading Input -->
+      <label class="mb-1">Heading</label>
+      <input v-model="videoContentCopy.heading" @input="updateVideoContent" class="input mb-4" />
+      <!-- Description Textarea -->
+      <label class="mb-1">Description</label>
+      <textarea
+        v-model="videoContentCopy.description"
+        @input="updateVideoContent"
+        rows="4"
+        class="mb-1 input textarea"
+      ></textarea>
+    </template>
   </div>
 </template>
 
@@ -142,7 +144,7 @@ export default defineComponent({
 
     const removeVideo = async () => {
       const message = props.isNewVideo
-        ? `Are you sure you want to discard all the changes?`
+        ? `Are you sure you want to cancel this action?`
         : `Are you sure you want to delete this video and its content for all the languages? <br><br>This action cannot be undone.`
       const isConfirmed = await modalStore.showConfirmationModal(message)
 
