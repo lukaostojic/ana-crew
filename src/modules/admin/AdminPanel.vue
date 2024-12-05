@@ -191,10 +191,9 @@ export default defineComponent({
     }
   },
 })
-// When adding video, video content for all languages should be updated with empty strings, excempt for the active language, if there is content
 // When deleting a language, chosen language in the header gets removed
 // When removing a language, that language isn't available in all languages array (until refresh)
-// Disable global save when in adding new video mode
+// When adding a new video, it should be first in the array (target by id, not by index)
 
 // Implement Quill editor for About Us section
 </script>

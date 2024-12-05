@@ -4,7 +4,7 @@ import { fetchAllVideos, addNewVideo, updateExistingVideo } from '@/services/vid
 
 export const useVideosStore = defineStore('videos', () => {
   const allVideos = ref<any>([])
-  const video = ref()
+  const video = ref([])
 
   const getAllVideos = async () => {
     try {

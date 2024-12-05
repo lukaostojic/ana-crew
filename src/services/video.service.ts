@@ -1,5 +1,5 @@
 import { db } from '../config/firebase'
-import { getDocs, collection, setDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore'
+import { getDoc, getDocs, collection, setDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore'
 import { useNotificationStore } from '@/stores/notification'
 
 export const fetchAllVideos = async () => {
@@ -51,14 +51,16 @@ export const removeVideo = async (id: string) => {
     const languages = languagesSnapshot.docs.map((doc) => doc.id)
 
     for (const language of languages) {
-      const videosRef = collection(db, 'content', language, 'videos')
-      const querySnapshot = await getDocs(videosRef)
-      const videosToDelete = querySnapshot.docs.filter((doc) => doc.data().videoId === id)
+      const languageDocRef = doc(db, 'content', language)
+      const languageDocSnapshot = await getDoc(languageDocRef)
 
-      for (const videoDoc of videosToDelete) {
-        await deleteDoc(doc(db, 'content', language, 'videos', videoDoc.id))
-        console.log(`Deleted video content for language: ${language}`)
-      }
+      if (!languageDocSnapshot.exists()) continue
+      const data = languageDocSnapshot.data()
+      const videos = data.videos || []
+      const updatedVideos = videos.filter((video) => video.videoId !== id)
+
+      if (videos.length === updatedVideos.length) continue
+      await updateDoc(languageDocRef, { videos: updatedVideos })
     }
 
     const notificationStore = useNotificationStore()

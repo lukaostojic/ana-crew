@@ -56,7 +56,7 @@ export default defineComponent({
   setup(props, { emit }) {
     const videoStore = useVideosStore()
     const localizationStore = useLocalizationStore()
-    const videosData = ref<any>([])
+    const videosData = ref<any[]>([])
     const videosContent = ref<any>({ ...props.content?.videos })
     const isNewVideo = ref(false)
 

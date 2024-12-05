@@ -31,11 +31,11 @@
           class="button button--secondary button--icon mr-2"
         >
           <span>{{ videoLabels.green }}</span>
-          <span class="material-symbols-outlined"> check </span>
+          <span class="material-symbols-outlined"> {{ isNewVideo ? 'check' : 'upgrade' }} </span>
         </button>
         <button @click="removeVideo" class="button button--danger button--icon">
           <span>{{ videoLabels.red }}</span>
-          <span class="material-symbols-outlined"> delete </span>
+          <span class="material-symbols-outlined"> {{ isNewVideo ? 'close' : 'delete' }} </span>
         </button>
       </div>
     </div>
@@ -124,7 +124,9 @@ export default defineComponent({
 
     const checkSaveButtonState = () => {
       isSaveButtonDisabled.value =
-        videoDataCopy.value.url.trim() === props.videoData.url.trim() || !isUrlValid.value
+        videoDataCopy.value.url === props.videoData.url ||
+        !isUrlValid.value ||
+        !isYouTubeUrl(props.videoData.url)
     }
 
     const validateUrl = () => {
