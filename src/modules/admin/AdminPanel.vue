@@ -132,17 +132,20 @@ export default defineComponent({
 
     const fetchContent = async () => {
       await localizationStore.loadLocalizationContent()
+
       content.value = { ...(localizationStore.content as Content) }
       contentCopy.value = Object.freeze(JSON.parse(JSON.stringify(content.value)))
     }
 
     const updateContent = (updatedContent: Content) => {
-      localizationStore.content = {
+      content.value = {
         ...content.value,
         ...updatedContent,
       }
 
-      if (deepEqual(localizationStore.content, contentCopy.value)) {
+      localizationStore.content = content.value
+
+      if (deepEqual(content.value, contentCopy.value)) {
         isSaveButtonDisabled.value = true
       } else {
         isSaveButtonDisabled.value = false

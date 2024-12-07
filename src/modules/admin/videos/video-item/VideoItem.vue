@@ -145,6 +145,11 @@ export default defineComponent({
     }
 
     const removeVideo = async () => {
+      if (props.isNewVideo && props.videoData.url === '') {
+        emit('remove-video', videoDataCopy.value.id)
+        return
+      }
+
       const message = props.isNewVideo
         ? `Are you sure you want to cancel this action?`
         : `Are you sure you want to delete this video and its content for all the languages? <br><br>This action cannot be undone.`
