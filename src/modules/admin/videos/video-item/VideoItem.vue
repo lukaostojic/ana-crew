@@ -15,12 +15,6 @@
         <small v-if="!isUrlValid && videoData.url.length > 0" class="error-text p-absolute pr-2">
           Please enter a valid URL
         </small>
-        <small
-          v-if="isDuplicateUrlError && videoData.url.length > 0"
-          class="error-text p-absolute pr-2"
-        >
-          This URL is already in use
-        </small>
       </div>
       <!-- Actions -->
       <div class="video-item__actions d-flex p-relative">
@@ -99,7 +93,6 @@ export default defineComponent({
     const videoDataCopy = ref<VideoData>({ ...props.videoData })
     const videoContentCopy = ref<VideoContent>({ ...props.videoContent })
     const isUrlValid = ref(true)
-    const isDuplicateUrlError = ref(false)
     const isSaveButtonDisabled = ref(true)
 
     const videoLabels = computed(() => {
@@ -107,20 +100,6 @@ export default defineComponent({
         ? { green: 'Save', red: 'Cancel' }
         : { green: 'Update', red: 'Delete' }
     })
-
-    const embedUrl = computed(() => {
-      const url = props.videoData.url
-      const youtubeMatch = url.match(/(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([^&]+)/)
-
-      if (youtubeMatch) {
-        return `https://www.youtube.com/embed/${youtubeMatch[1]}`
-      }
-      return ''
-    })
-
-    const isYouTubeUrl = (url: string) => {
-      return /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=/.test(url)
-    }
 
     const checkSaveButtonState = () => {
       isSaveButtonDisabled.value =
@@ -160,6 +139,20 @@ export default defineComponent({
       }
     }
 
+    const embedUrl = computed(() => {
+      const url = props.videoData.url
+      const youtubeMatch = url.match(/(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([^&]+)/)
+
+      if (youtubeMatch) {
+        return `https://www.youtube.com/embed/${youtubeMatch[1]}`
+      }
+      return ''
+    })
+
+    const isYouTubeUrl = (url: string) => {
+      return /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=/.test(url)
+    }
+
     watch(
       () => props.videoContent,
       (newVal) => {
@@ -183,7 +176,6 @@ export default defineComponent({
       videoDataCopy,
       videoContentCopy,
       isUrlValid,
-      isDuplicateUrlError,
       isSaveButtonDisabled,
       videoLabels,
       embedUrl,

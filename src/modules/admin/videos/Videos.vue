@@ -20,16 +20,16 @@
       </div>
     </div>
     <div v-else class="videos__list pb-5">
-      <div v-for="(videoData, index) in videosData" :key="index">
+      <div v-for="(videoData, index) in reversedVideosData" :key="videoData.id">
         <VideoItem
           :allVideos="videosData"
           :videoData="videoData"
-          :videoContent="videosContent[index]"
+          :videoContent="videosContent[videosData.length - 1 - index]"
           :isNewVideo="isNewVideo"
-          @update-video-data="updateVideoData(index, $event)"
-          @update-video-content="updateVideoContent(index, $event)"
+          @update-video-data="updateVideoData(videosData.length - 1 - index, $event)"
+          @update-video-content="updateVideoContent(videosData.length - 1 - index, $event)"
           @remove-video="deleteVideo($event)"
-          :class="{ disabled: isNewVideo && index !== videosData.length - 1 }"
+          :class="{ disabled: isNewVideo && index !== 0 }"
           class="list-item"
         />
       </div>
@@ -38,7 +38,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch, onMounted } from 'vue'
+import { defineComponent, ref, watch, computed, onMounted } from 'vue'
 import { useVideosStore } from '../../../stores/videos'
 import { useLocalizationStore } from '../../../stores/localization'
 import { updateExistingVideo, addNewVideo, removeVideo } from '../../../services/video.service'
@@ -56,9 +56,11 @@ export default defineComponent({
   setup(props, { emit }) {
     const videoStore = useVideosStore()
     const localizationStore = useLocalizationStore()
-    const videosData = ref<any[]>([])
-    const videosContent = ref<any>({ ...props.content?.videos })
+    const videosData = ref<VideoData[]>([])
+    const videosContent = ref<VideoContent>({ ...props.content?.videos })
     const isNewVideo = ref(false)
+
+    const reversedVideosData = computed(() => [...videosData.value].reverse())
 
     const handleAddNewVideo = () => {
       const videoId = generateUniqueId()
@@ -134,6 +136,7 @@ export default defineComponent({
       videosData,
       videosContent,
       isNewVideo,
+      reversedVideosData,
       handleAddNewVideo,
       updateVideoData,
       updateVideoContent,
