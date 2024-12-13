@@ -9,7 +9,7 @@ import {
 import type { Language } from '@/services/language.service'
 
 export const useLocalizationStore = defineStore('localization', () => {
-  const selectedLanguage = ref<Language | null>({ code: 'en', name: 'English' })
+  const selectedLanguage = ref<Language>({ code: 'en', name: 'English' })
   const availableLanguages = ref<Language[]>([])
   const content = ref<Record<string, any>>({
     videos: [],
@@ -47,8 +47,6 @@ export const useLocalizationStore = defineStore('localization', () => {
   const removeLanguageContent = async (language: Language) => {
     if (language.code) {
       await deleteLanguageContent(language.code)
-
-      selectedLanguage.value = null
       Object.assign(content.value, {})
     }
   }

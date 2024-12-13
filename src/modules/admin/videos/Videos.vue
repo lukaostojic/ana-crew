@@ -101,13 +101,10 @@ export default defineComponent({
     }
 
     const deleteVideo = async (id: string) => {
-      if (isNewVideo.value) {
-        videosData.value = videosData.value.filter((v: VideoData) => v.id !== id)
-        isNewVideo.value = false
-      } else {
-        await removeVideo(id)
-        isNewVideo.value = false
-      }
+      if (!isNewVideo.value) await removeVideo(id)
+
+      videosData.value = videosData.value.filter((v: VideoData) => v.id !== id)
+      isNewVideo.value = false
     }
 
     watch(

@@ -4,6 +4,9 @@
   >
     <li>{{ content?.NAVIGATION_HOME }}</li>
     <li>{{ content?.NAVIGATION_VIDEOS }}</li>
+    <li>{{ content?.NAVIGATION_IMAGES }}</li>
+    <li>{{ content?.NAVIGATION_ARTISTS }}</li>
+    <li>{{ content?.NAVIGATION_CONTACT }}</li>
   </ul>
   <div style="text-align: center; margin-top: 20px; font-size: 24px; font-weight: 600">
     {{ content?.HEADER_HEADING }}
@@ -12,7 +15,7 @@
   <div style="margin-top: 20px; font-size: 18px; font-weight: 600; text-align: center">
     {{ content?.ABOUT_US_HEADING }}
   </div>
-  <div style="margin-top: 12px; text-align: center">{{ content?.ABOUT_US_CONTENT }}</div>
+  <div style="margin-top: 12px; text-align: center" v-html="aboutUsContentWithBreaks"></div>
   <div>
     <select v-model="selectedLanguageCode">
       <option v-for="language in availableLanguages" :key="language.code" :value="language.code">
@@ -23,7 +26,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch, onMounted } from 'vue'
+import { defineComponent, ref, computed, watch, onMounted } from 'vue'
 import { fetchSelectedLanguages, fetchDefaultLanguage } from '../../services/language.service'
 import { useLocalizationStore } from '../../stores/localization'
 import type { Language } from '../../services/language.service'
@@ -34,6 +37,10 @@ export default defineComponent({
     const content = localizationStore.content
     const availableLanguages = ref<Language[]>([])
     const selectedLanguageCode = ref<string>('')
+
+    const aboutUsContentWithBreaks = computed(() => {
+      return content?.ABOUT_US_CONTENT?.replace(/\n/g, '<br>') || ''
+    })
 
     const fetchLanguages = async () => {
       try {
@@ -78,6 +85,7 @@ export default defineComponent({
 
     return {
       content,
+      aboutUsContentWithBreaks,
       availableLanguages,
       selectedLanguageCode,
     }

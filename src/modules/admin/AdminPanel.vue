@@ -100,7 +100,7 @@ export default defineComponent({
     const authStore = useAuthStore()
     const localizationStore = useLocalizationStore()
 
-    const language = ref<Language | null>()
+    const language = ref<Language>()
     const content = ref<Content>()
     const contentCopy = ref(Object.freeze({}))
     const isSaveButtonDisabled = ref(true)
@@ -194,10 +194,7 @@ export default defineComponent({
     }
   },
 })
-// When deleting a language, chosen language in the header gets removed
 // When removing a language, that language isn't available in all languages array (until refresh)
-
-// Implement Quill editor for About Us section
 </script>
 
 <style lang="scss" scoped src="./AdminPanel.scss"></style>
