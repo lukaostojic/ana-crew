@@ -1,0 +1,43 @@
+@import '../../../styles/variables';
+
+.articles {
+  &__add-button {
+    button.add {
+      right: 168px;
+      bottom: 27px;
+      width: 160px;
+
+      &.disabled {
+        opacity: 0.5;
+        pointer-events: none;
+      }
+    }
+  }
+
+  &__no-articles {
+    height: calc(100vh - 232px);
+
+    .no-article {
+      font-size: 60px;
+    }
+  }
+
+  &__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(440px, 1fr));
+    align-content: start;
+    grid-gap: 20px;
+    height: calc(100vh - 232px);
+    overflow-y: auto;
+
+    .list-item {
+      transition: $default-transition;
+
+      &.disabled {
+        filter: blur(1px);
+        opacity: 0.5;
+        pointer-events: none;
+      }
+    }
+  }
+}

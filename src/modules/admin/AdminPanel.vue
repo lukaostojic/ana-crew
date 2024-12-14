@@ -107,10 +107,11 @@ export default defineComponent({
     const isSidemenuOpened = ref(true)
     const activeTab = ref(0)
     const tabs = ref([
-      { label: 'Content', icon: 'description', route: '/admin/content' },
+      { label: 'Content', icon: 'edit_square', route: '/admin/content' },
       { label: 'Videos', icon: 'movie', route: '/admin/videos' },
-      { label: 'Photo Galleries', icon: 'photo_library', route: '/admin/galleries' },
-      { label: 'Artists', icon: 'music_note', route: '/admin/artists' },
+      { label: 'Articles', icon: 'clarify', route: '/admin/articles' },
+      // { label: 'Photo Galleries', icon: 'photo_library', route: '/admin/galleries' },
+      // { label: 'Artists', icon: 'music_note', route: '/admin/artists' },
     ])
 
     const isSelectedTab = (tabName: string) => {

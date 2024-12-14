@@ -99,6 +99,7 @@ export default defineComponent({
           content: newContent?.ABOUT_US_CONTENT || '',
         },
         videos: newContent?.videos || [],
+        articles: newContent?.articles || [],
       }
     }
 
