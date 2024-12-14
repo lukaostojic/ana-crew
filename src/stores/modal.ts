@@ -3,7 +3,7 @@ import { ref } from 'vue'
 
 export const useModalStore = defineStore('modal', () => {
   const isModalActive = ref(false)
-  const modalMessage = ref('')
+  const modalMessage = ref<string>('')
   const resolveAction = ref<((value: boolean) => void) | null>(null)
 
   const setIsModalActive = (isActive: boolean) => {

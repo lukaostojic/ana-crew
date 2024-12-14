@@ -1,6 +1,7 @@
 import { db } from '../config/firebase'
 import { getDoc, getDocs, collection, setDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore'
 import { useNotificationStore } from '@/stores/notification'
+import type { VideoContent } from '@/types/content'
 
 export const fetchAllVideos = async () => {
   try {
@@ -57,7 +58,7 @@ export const removeVideo = async (id: string) => {
       if (!languageDocSnapshot.exists()) continue
       const data = languageDocSnapshot.data()
       const videos = data.videos || []
-      const updatedVideos = videos.filter((video) => video.videoId !== id)
+      const updatedVideos = videos.filter((video: VideoContent) => video.videoId !== id)
 
       if (videos.length === updatedVideos.length) continue
       await updateDoc(languageDocRef, { videos: updatedVideos })

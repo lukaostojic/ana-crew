@@ -12,9 +12,9 @@ export type Content = {
   ]
   aboutUs: {
     heading: string
-    content: any
+    content: string
   }
-  videos: []
+  videos: VideoContent[]
 }
 
 export type VideoData = {
@@ -24,8 +24,8 @@ export type VideoData = {
 
 export type VideoContent = {
   videoId?: string
-  heading?: ''
-  description?: ''
+  heading?: string
+  description?: string
 }
 
 export interface Language {

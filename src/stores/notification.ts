@@ -5,9 +5,9 @@ export const NOTIFICATION_TIMEOUT = 5000
 
 export const useNotificationStore = defineStore('notification', () => {
   const isLoading = ref(false)
-  const notification = ref('')
+  const notification = ref<string>('')
 
-  const setNotification = (newNotification: any) => {
+  const setNotification = (newNotification: string) => {
     notification.value = newNotification
     setTimeout(() => {
       notification.value = ''

@@ -1,9 +1,10 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { fetchAllVideos, addNewVideo, updateExistingVideo } from '@/services/video.service'
+import type { VideoData } from '@/types/content'
 
 export const useVideosStore = defineStore('videos', () => {
-  const allVideos = ref<any>([])
+  const allVideos = ref<any[]>([])
   const video = ref([])
 
   const getAllVideos = async () => {
@@ -28,7 +29,9 @@ export const useVideosStore = defineStore('videos', () => {
   const updateVideo = async (videoData: { videoId: string; url: string }) => {
     try {
       await updateExistingVideo(videoData.videoId, videoData.url)
-      const videoIndex = allVideos.value.findIndex((video) => video.id === videoData.videoId)
+      const videoIndex = allVideos.value.findIndex(
+        (video: VideoData) => video.id === videoData.videoId,
+      )
       if (videoIndex > -1) {
         allVideos.value[videoIndex].url = videoData.url
       }
