@@ -25,10 +25,10 @@
           :allArticles="articlesData"
           :articleData="articleData"
           :articleContent="articlesContent[articlesData.length - 1 - index]"
-          :isNewVideo="isNewArticle"
-          @update-video-data="updateArticleData(articlesData.length - 1 - index, $event)"
-          @update-video-content="updateArticleContent(articlesData.length - 1 - index, $event)"
-          @remove-video="deleteArticle($event)"
+          :isNewArticle="isNewArticle"
+          @update-article-data="updateArticleData(articlesData.length - 1 - index, $event)"
+          @update-article-content="updateArticleContent(articlesData.length - 1 - index, $event)"
+          @remove-article="deleteArticle($event)"
           :class="{ disabled: isNewArticle && index !== 0 }"
           class="list-item"
         />
@@ -71,7 +71,12 @@ export default defineComponent({
 
     const updateArticleContent = (index: number, updatedContent: ArticleContent) => {}
 
-    const deleteArticle = (id: string) => {}
+    const deleteArticle = async (id: string) => {
+      // if (!isNewArticle.value) await removeVideo(id)
+
+      articlesData.value = articlesData.value.filter((v: ArticleData) => v.id !== id)
+      isNewArticle.value = false
+    }
 
     return {
       isNewArticle,

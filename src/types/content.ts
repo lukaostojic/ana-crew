@@ -12,16 +12,9 @@ export type Content = {
   articles: ArticleContent[]
 }
 
-export type ArticleData = {
-  id: string
-  imageUrl: string
-  link?: string
-}
-
-export type ArticleContent = {
-  articleId?: string
-  heading?: string
-  content?: string
+export type NavigationLink = {
+  label: string
+  value: string
 }
 
 export type VideoData = {
@@ -35,12 +28,19 @@ export type VideoContent = {
   description?: string
 }
 
+export type ArticleData = {
+  id: string
+  imageUrl: string
+  link?: string
+}
+
+export type ArticleContent = {
+  articleId?: string
+  heading?: string
+  content?: string
+}
+
 export type Language = {
   code: string
   name: string
-}
-
-export type NavigationLink = {
-  label: string
-  value: string
 }
