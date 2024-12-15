@@ -30,7 +30,9 @@ export type VideoContent = {
 
 export type ArticleData = {
   id: string
-  imageUrl: string
+  imgbbId?: string
+  imageUrl?: string
+  image?: string
   link?: string
 }
 

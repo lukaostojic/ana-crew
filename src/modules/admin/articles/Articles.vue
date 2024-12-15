@@ -38,8 +38,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from 'vue'
+import { defineComponent, ref, computed, watch, onMounted } from 'vue'
 import { generateUniqueId } from '../../../helpers/helper-functions'
+import { uploadImage } from '../../../services/image.service'
+import { useArticlesStore } from '../../../stores/articles'
 import type { ArticleData, ArticleContent } from '../../../types/content'
 import ArticleItem from './article-item/ArticleItem.vue'
 
@@ -50,6 +52,7 @@ export default defineComponent({
     content: Object,
   },
   setup(props) {
+    const articlesStore = useArticlesStore()
     const isNewArticle = ref()
     const articlesData = ref<ArticleData[]>([])
     const articlesContent = ref<ArticleContent>({ ...props.content?.videos })
@@ -61,22 +64,56 @@ export default defineComponent({
       const newArticle: ArticleData = {
         id: articleId,
         imageUrl: '',
+        imgbbId: '',
       }
 
       articlesData.value.push(newArticle)
       isNewArticle.value = true
     }
 
-    const updateArticleData = (index: number, updatedData: ArticleData) => {}
+    const updateArticleData = async (index, imageSource) => {
+      const article = articlesStore.allArticles[index]
+      if (!article) return
+
+      try {
+        const image = await uploadImage(imageSource)
+        const url = image?.url
+        const imgbbId = image?.id
+        console.log(image)
+        console.log(article)
+        if (url) {
+          article.imageUrl = url
+          article.imgbbId = imgbbId
+          // article.imgbbId = imageSource.id
+          await articlesStore.updateArticle(article)
+          isNewArticle.value = false
+        }
+      } catch (error) {
+        console.error('Failed to update article:', error)
+      }
+    }
 
     const updateArticleContent = (index: number, updatedContent: ArticleContent) => {}
 
     const deleteArticle = async (id: string) => {
-      // if (!isNewArticle.value) await removeVideo(id)
+      if (!isNewArticle.value) await articlesStore.deleteArticle(id)
 
       articlesData.value = articlesData.value.filter((v: ArticleData) => v.id !== id)
       isNewArticle.value = false
     }
+
+    watch(
+      () => articlesStore.allArticles,
+      (newVal) => {
+        articlesData.value = newVal
+        console.log(articlesData.value)
+      },
+      { deep: true, immediate: true },
+    )
+
+    onMounted(() => {
+      articlesStore.getAllArticles()
+    })
 
     return {
       isNewArticle,

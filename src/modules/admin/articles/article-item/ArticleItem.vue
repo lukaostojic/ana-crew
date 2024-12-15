@@ -9,7 +9,10 @@
           :class="{ 'has-image': imagePreview }"
         >
           <div v-if="!imagePreview" class="image-upload__placeholder">
-            <span class="material-symbols-outlined">add_photo_alternate</span>
+            <span v-if="!articleData.imageUrl" class="material-symbols-outlined"
+              >add_photo_alternate</span
+            >
+            <img v-else :src="articleData.imageUrl" class="image-upload__preview" />
           </div>
           <img v-else :src="imagePreview" alt="Uploaded preview" class="image-upload__preview" />
           <div class="upload-icon p-absolute px-2 py-1">
@@ -19,6 +22,7 @@
       </div>
       <div class="actions d-flex justify-end align-center w-100">
         <button
+          @click="updateArticleData"
           :class="{ disabled: !imagePreview }"
           class="button button--secondary button--icon mr-2"
         >
@@ -27,7 +31,9 @@
         </button>
         <button @click="removeArticle" class="button button--danger button--icon">
           <span>{{ articleLabels.red }}</span>
-          <span class="material-symbols-outlined"> {{ isNewArticle ? 'close' : 'delete' }} </span>
+          <span class="material-symbols-outlined">
+            {{ isNewArticle ? 'close' : 'delete' }}
+          </span>
         </button>
       </div>
     </div>
@@ -53,6 +59,7 @@ export default defineComponent({
   setup(props, { emit }) {
     const modalStore = useModalStore()
     const imagePreview = ref<string | null>(null)
+    const imageSrouce = ref()
     const articleDataCopy = ref<ArticleData>({ ...props.articleData })
 
     const articleLabels = computed(() => {
@@ -63,6 +70,7 @@ export default defineComponent({
 
     const handleFileUpload = (event: Event) => {
       const file = (event.target as HTMLInputElement).files?.[0]
+      imageSrouce.value = event
 
       if (file) {
         const reader = new FileReader()
@@ -76,6 +84,12 @@ export default defineComponent({
     const triggerFileUpload = () => {
       const fileInput = document.querySelector<HTMLInputElement>('input[type="file"]')
       fileInput?.click()
+    }
+
+    const updateArticleData = async () => {
+      if (imagePreview.value) {
+        emit('update-article-data', imageSrouce.value)
+      }
     }
 
     const removeArticle = async () => {
@@ -99,6 +113,7 @@ export default defineComponent({
       imagePreview,
       handleFileUpload,
       triggerFileUpload,
+      updateArticleData,
       removeArticle,
     }
   },
