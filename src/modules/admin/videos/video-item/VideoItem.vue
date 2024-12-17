@@ -25,7 +25,9 @@
           class="button button--secondary button--icon mr-2"
         >
           <span>{{ videoLabels.green }}</span>
-          <span class="material-symbols-outlined"> {{ isNewVideo ? 'check' : 'upgrade' }} </span>
+          <span class="material-symbols-outlined">
+            {{ isNewVideo ? 'check' : 'upload_file' }}
+          </span>
         </button>
         <button @click="removeVideo" class="button button--danger button--icon">
           <span>{{ videoLabels.red }}</span>

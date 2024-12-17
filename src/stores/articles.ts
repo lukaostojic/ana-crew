@@ -6,7 +6,7 @@ import {
   updateExistingArticle,
   deleteArticleById,
 } from '@/services/article.service'
-import { fetchImage } from '@/services/image.service'
+import { deleteImage } from '@/services/image.service'
 import type { ArticleData } from '@/types/content'
 
 export const useArticlesStore = defineStore('articles', () => {
@@ -15,17 +15,6 @@ export const useArticlesStore = defineStore('articles', () => {
   const getAllArticles = async () => {
     try {
       const articles = await fetchAllArticles()
-      // const articlesWithImages = await Promise.all(
-      //   articles.map(async (article) => {
-      //     if (article.imgbbId) {
-      //       const imageUrl = await fetchImage(article.imgbbId)
-      //       console.log(imageUrl)
-      //       return { ...article, imageUrl }
-      //     }
-      //     return article
-      //   }),
-      // )
-
       allArticles.value = articles
     } catch (error) {
       console.error('Failed to load articles:', error)
@@ -42,9 +31,11 @@ export const useArticlesStore = defineStore('articles', () => {
     }
   }
 
-  const updateArticle = async (articleData: ArticleData) => {
+  const updateArticle = async (articleData: ArticleData, isNewArticle: boolean) => {
     try {
-      await updateExistingArticle(articleData.id, articleData)
+      const { id, deleteUrl, imageUrl } = articleData
+
+      await updateExistingArticle(id, { deleteUrl, imageUrl }, isNewArticle)
       const articleIndex = allArticles.value.findIndex((article) => article.id === articleData.id)
       if (articleIndex > -1) {
         allArticles.value[articleIndex] = articleData

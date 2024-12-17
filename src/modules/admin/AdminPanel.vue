@@ -195,6 +195,11 @@ export default defineComponent({
     }
   },
 })
+// Handle image upload cancelation
+
+// When updating a photo, delete the photo with the same id from ImbBB, and replace it with new photo
+// Wnen deleting a photo, delete it from ImgBB as well (CORS?)
+
 // When removing a language, that language isn't available in all languages array (until refresh)
 </script>
 

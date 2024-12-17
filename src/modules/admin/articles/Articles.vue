@@ -3,7 +3,7 @@
     <div class="articles__add-button d-flex justify-end align-center p-relative">
       <button
         @click="handleAddNewArticle"
-        :class="{ disabled: isNewArticle }"
+        :class="{ disabled: isNewArticle || isActionInProgress }"
         class="button button--secondary button--icon p-absolute add"
       >
         <span>Add Article</span>
@@ -40,7 +40,7 @@
 <script lang="ts">
 import { defineComponent, ref, computed, watch, onMounted } from 'vue'
 import { generateUniqueId } from '../../../helpers/helper-functions'
-import { uploadImage } from '../../../services/image.service'
+import { uploadImage, deleteImage } from '../../../services/image.service'
 import { useArticlesStore } from '../../../stores/articles'
 import type { ArticleData, ArticleContent } from '../../../types/content'
 import ArticleItem from './article-item/ArticleItem.vue'
@@ -54,6 +54,7 @@ export default defineComponent({
   setup(props) {
     const articlesStore = useArticlesStore()
     const isNewArticle = ref()
+    const isActionInProgress = ref(false)
     const articlesData = ref<ArticleData[]>([])
     const articlesContent = ref<ArticleContent>({ ...props.content?.videos })
 
@@ -64,7 +65,7 @@ export default defineComponent({
       const newArticle: ArticleData = {
         id: articleId,
         imageUrl: '',
-        imgbbId: '',
+        deleteUrl: '',
       }
 
       articlesData.value.push(newArticle)
@@ -73,23 +74,27 @@ export default defineComponent({
 
     const updateArticleData = async (index, imageSource) => {
       const article = articlesStore.allArticles[index]
+
       if (!article) return
 
       try {
+        isActionInProgress.value = true
+
         const image = await uploadImage(imageSource)
         const url = image?.url
-        const imgbbId = image?.id
-        console.log(image)
-        console.log(article)
-        if (url) {
+        const deleteUrl = image?.delete_url
+
+        if (url && deleteUrl) {
           article.imageUrl = url
-          article.imgbbId = imgbbId
-          // article.imgbbId = imageSource.id
-          await articlesStore.updateArticle(article)
+          article.deleteUrl = deleteUrl
+
+          await articlesStore.updateArticle(article, isNewArticle.value)
           isNewArticle.value = false
+          isActionInProgress.value = false
         }
       } catch (error) {
         console.error('Failed to update article:', error)
+        isActionInProgress.value = false
       }
     }
 
@@ -106,7 +111,6 @@ export default defineComponent({
       () => articlesStore.allArticles,
       (newVal) => {
         articlesData.value = newVal
-        console.log(articlesData.value)
       },
       { deep: true, immediate: true },
     )
@@ -120,6 +124,7 @@ export default defineComponent({
       articlesData,
       reversedArticlesData,
       articlesContent,
+      isActionInProgress,
       handleAddNewArticle,
       updateArticleData,
       updateArticleContent,

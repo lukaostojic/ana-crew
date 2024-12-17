@@ -5,16 +5,18 @@
     background-color: $primary-theme-color3;
     border-radius: $default-border-radius;
     border-left: 4px solid $primary-theme-color1;
-    box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
   }
 
   &__data {
-    .actions .button {
-      width: 100px;
+    .actions {
+      .button {
+        width: 100px;
 
-      &.disabled {
-        opacity: 0.5;
-        pointer-events: none;
+        &.disabled {
+          opacity: 0.5;
+          pointer-events: none;
+        }
       }
     }
   }
@@ -24,42 +26,71 @@
   &__card {
     width: 100%;
     aspect-ratio: 4 / 3;
-    border: 2px dashed $border-color-light;
     border-radius: $default-border-radius;
     background-color: $white-color;
     cursor: pointer;
     overflow: hidden;
     transition: $default-transition;
 
-    &:hover .image-upload__placeholder span {
-      transform: scale(1.15);
+    &.has-preview {
+      background-color: $white-color;
+
+      &:after {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        transition: $default-transition;
+      }
+
+      &:hover:after {
+        background-color: rgba(81, 81, 81, 0.5);
+      }
+
+      .upload-icon {
+        background-color: transparent;
+        z-index: 10;
+
+        span {
+          color: $white-color;
+        }
+      }
+    }
+
+    &:hover {
+      .upload-icon {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      .image-upload__placeholder span {
+        transform: scale(1.15);
+      }
     }
 
     .upload-icon {
+      padding: 2px 6px;
       border-radius: $default-border-radius;
       background-color: $white-color;
-      box-shadow: 0px 5px 15px 0px rgba(0, 0, 0, 0.45);
       opacity: 0;
       transform: scale(0.85);
       transition: $default-transition;
 
       span {
         position: relative;
-        top: 3px;
-      }
-    }
-
-    &.has-image {
-      border: none;
-
-      &:hover .upload-icon {
-        opacity: 1;
-        transform: scale(1);
+        top: 5px;
+        color: $primary-text-color;
+        font-size: 40px;
       }
     }
   }
 
   &__placeholder {
+    top: 4px;
+
     span {
       font-size: 40px;
       transition: $default-transition;
@@ -74,5 +105,13 @@
 
   input[type='file'] {
     display: none;
+  }
+}
+
+.external-link {
+  small.error-text {
+    top: 68px;
+    background-color: $primary-theme-color3;
+    color: $red-color;
   }
 }
