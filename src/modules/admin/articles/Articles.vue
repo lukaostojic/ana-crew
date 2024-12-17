@@ -66,34 +66,45 @@ export default defineComponent({
         id: articleId,
         imageUrl: '',
         deleteUrl: '',
+        link: '',
       }
 
       articlesData.value.push(newArticle)
       isNewArticle.value = true
     }
 
-    const updateArticleData = async (index, imageSource) => {
+    const updateArticleData = async (index, data) => {
       const article = articlesStore.allArticles[index]
 
-      if (!article) return
+      if (!article) {
+        console.error(`No article found at index ${index}`)
+        return
+      }
 
       try {
         isActionInProgress.value = true
 
-        const image = await uploadImage(imageSource)
-        const url = image?.url
-        const deleteUrl = image?.delete_url
-
-        if (url && deleteUrl) {
-          article.imageUrl = url
-          article.deleteUrl = deleteUrl
-
+        if (data.link) {
+          article.link = data.link
           await articlesStore.updateArticle(article, isNewArticle.value)
-          isNewArticle.value = false
-          isActionInProgress.value = false
+        }
+
+        if (data.imageSource) {
+          const image = await uploadImage(data.imageSource)
+
+          if (image?.url && image?.delete_url) {
+            article.imageUrl = image.url
+            article.deleteUrl = image.delete_url
+
+            await articlesStore.updateArticle(article, isNewArticle.value)
+          } else {
+            console.error('Image upload failed or incomplete response')
+          }
         }
       } catch (error) {
         console.error('Failed to update article:', error)
+      } finally {
+        isNewArticle.value = false
         isActionInProgress.value = false
       }
     }

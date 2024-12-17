@@ -30,6 +30,11 @@
     height: calc(100vh - 232px);
     overflow-y: auto;
 
+    @media (max-width: 760px) {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto;
+    }
+
     .list-item {
       transition: $default-transition;
 

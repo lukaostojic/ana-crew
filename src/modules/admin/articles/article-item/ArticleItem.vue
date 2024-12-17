@@ -1,7 +1,46 @@
 <template>
   <div class="article-item__wrapper p-4">
     <div class="article-item__data d-flex-col justify-sb align-start">
-      <div class="image-upload p-relative w-100 mb-4">
+      <div class="d-flex justify-sb align-center w-100">
+        <div class="external-link d-flex-col p-relative w-100 mr-4">
+          <label class="mb-1">External Link - Optional</label>
+          <input
+            v-model="articleData.link"
+            class="input"
+            :class="{
+              'input--error': !isUrlValid && articleData.link && articleData.link.length > 0,
+            }"
+            @input="validateUrl"
+          />
+          <small
+            v-if="!isUrlValid && articleData.link && articleData.link.length > 0"
+            class="error-text p-absolute pr-2"
+          >
+            Please enter a valid URL
+          </small>
+        </div>
+        <div class="actions d-flex justify-end align-center w-100 mt-5">
+          <button
+            @click="updateArticleData"
+            :class="{
+              disabled: !isPreUploadTriggered && !isUrlValid,
+            }"
+            class="button button--secondary button--icon mr-2"
+          >
+            <span>{{ articleLabels.green }}</span>
+            <span class="material-symbols-outlined">
+              {{ isNewArticle ? 'check' : 'upload_file' }}
+            </span>
+          </button>
+          <button @click="removeArticle" class="button button--danger button--icon">
+            <span>{{ articleLabels.red }}</span>
+            <span class="material-symbols-outlined">
+              {{ isNewArticle ? 'close' : 'delete' }}
+            </span>
+          </button>
+        </div>
+      </div>
+      <div class="image-upload p-relative w-100 mt-4">
         <input type="file" @change="handleFileUpload" ref="fileInput" />
         <div
           class="image-upload__card d-flex justify-center align-center p-relative"
@@ -19,43 +58,6 @@
             <span class="material-symbols-outlined"> perm_media </span>
           </div>
         </div>
-      </div>
-      <div class="external-link d-flex-col p-relative w-100 mr-4">
-        <label class="mb-1">External Link - Optional</label>
-        <input
-          v-model="articleData.link"
-          class="input"
-          :class="{
-            'input--error': !isUrlValid && articleData.link && articleData.link.length > 0,
-          }"
-          @input="validateUrl"
-        />
-        <small
-          v-if="!isUrlValid && articleData.link && articleData.link.length > 0"
-          class="error-text p-absolute pr-2"
-        >
-          Please enter a valid URL
-        </small>
-      </div>
-      <div class="actions d-flex justify-end align-center w-100 mt-4">
-        <button
-          @click="updateArticleData"
-          :class="{
-            disabled: !isPreUploadTriggered && !isUrlValid,
-          }"
-          class="button button--secondary button--icon mr-2"
-        >
-          <span>{{ articleLabels.green }}</span>
-          <span class="material-symbols-outlined">
-            {{ isNewArticle ? 'check' : 'upload_file' }}
-          </span>
-        </button>
-        <button @click="removeArticle" class="button button--danger button--icon">
-          <span>{{ articleLabels.red }}</span>
-          <span class="material-symbols-outlined">
-            {{ isNewArticle ? 'close' : 'delete' }}
-          </span>
-        </button>
       </div>
     </div>
     <div class="article-item__content"></div>
@@ -118,8 +120,11 @@ export default defineComponent({
     }
 
     const updateArticleData = async () => {
-      if (imagePreview.value) {
-        emit('update-article-data', imageSrouce.value)
+      if (imagePreview.value || articleDataCopy.value.link) {
+        emit('update-article-data', {
+          imageSource: imageSrouce.value,
+          link: articleDataCopy.value.link,
+        })
         isPreUploadTriggered.value = false
       }
     }
@@ -143,9 +148,9 @@ export default defineComponent({
     watch(
       () => props.articleData,
       (newVal) => {
-        if (articleDataCopy.value.link === props.articleData.link && props.isNewArticle) {
-          articleDataCopy.value = { ...newVal }
-        }
+        // if (articleDataCopy.value.link === props.articleData.link && props.isNewArticle) {
+        articleDataCopy.value = { ...newVal }
+        // }
       },
       { deep: true, immediate: true },
     )

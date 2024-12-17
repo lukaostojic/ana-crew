@@ -33,9 +33,9 @@ export const useArticlesStore = defineStore('articles', () => {
 
   const updateArticle = async (articleData: ArticleData, isNewArticle: boolean) => {
     try {
-      const { id, deleteUrl, imageUrl } = articleData
+      const { id, deleteUrl, imageUrl, link } = articleData
 
-      await updateExistingArticle(id, { deleteUrl, imageUrl }, isNewArticle)
+      await updateExistingArticle(id, { deleteUrl, imageUrl, link }, isNewArticle)
       const articleIndex = allArticles.value.findIndex((article) => article.id === articleData.id)
       if (articleIndex > -1) {
         allArticles.value[articleIndex] = articleData
