@@ -1,8 +1,8 @@
 <template>
   <div class="video-item__wrapper p-relative d-flex-col p-4">
-    <h2 v-if="videoContentCopy.heading?.length" class="mb-5">{{ videoContentCopy.heading }}</h2>
-    <h2 v-else class="mb-5">Title</h2>
-    <div class="video-item__url d-flex justify-sb pb-4">
+    <h2 v-if="videoContentCopy.heading?.length" class="mb-3">{{ videoContentCopy.heading }}</h2>
+    <h2 v-else class="mb-3">Title</h2>
+    <div class="video-item__url d-flex justify-sb pb-4 mb-3">
       <!-- Video URL Input -->
       <div class="d-flex-col p-relative w-100 mr-4">
         <label class="mb-1">Video URL</label>

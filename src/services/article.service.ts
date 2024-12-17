@@ -1,5 +1,5 @@
 import { db } from '../config/firebase'
-import { collection, getDocs, doc, setDoc, deleteDoc } from 'firebase/firestore'
+import { collection, getDocs, doc, getDoc, setDoc, updateDoc, deleteDoc } from 'firebase/firestore'
 import { useNotificationStore } from '../stores/notification'
 import type { ArticleData } from '@/types/content'
 
@@ -29,10 +29,36 @@ export const updateExistingArticle = async (
     : notificationStore.setNotification(`Article has been updated.`)
 }
 
-export const deleteArticleById = async (articleId: string): Promise<void> => {
-  const articleDoc = doc(articlesCollection, articleId)
-  await deleteDoc(articleDoc)
+export const deleteArticleById = async (id: string): Promise<void> => {
+  try {
+    // Delete the article document
+    const articleRef = doc(db, 'articles', id)
+    await deleteDoc(articleRef)
 
-  const notificationStore = useNotificationStore()
-  notificationStore.setNotification(`Article has been successfully deleted.`)
+    // Fetch all language-specific content
+    const languagesSnapshot = await getDocs(collection(db, 'content'))
+    const languages = languagesSnapshot.docs.map((doc) => doc.id)
+
+    // Iterate through languages and update content
+    for (const language of languages) {
+      const languageDocRef = doc(db, 'content', language)
+      const languageDocSnapshot = await getDoc(languageDocRef)
+
+      if (!languageDocSnapshot.exists()) continue
+
+      const data = languageDocSnapshot.data()
+      const articles = data.articles || []
+      const updatedArticles = articles.filter((article: any) => article.articleId !== id)
+
+      if (articles.length === updatedArticles.length) continue
+      await updateDoc(languageDocRef, { articles: updatedArticles })
+    }
+
+    // Notify user
+    const notificationStore = useNotificationStore()
+    notificationStore.setNotification('Article has been successfully deleted')
+  } catch (error) {
+    console.error('Error deleting article and content:', error)
+    throw error
+  }
 }

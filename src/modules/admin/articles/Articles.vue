@@ -42,6 +42,7 @@ import { defineComponent, ref, computed, watch, onMounted } from 'vue'
 import { generateUniqueId } from '../../../helpers/helper-functions'
 import { uploadImage, deleteImage } from '../../../services/image.service'
 import { useArticlesStore } from '../../../stores/articles'
+import { useLocalizationStore } from '../../../stores/localization'
 import type { ArticleData, ArticleContent } from '../../../types/content'
 import ArticleItem from './article-item/ArticleItem.vue'
 
@@ -51,8 +52,9 @@ export default defineComponent({
   props: {
     content: Object,
   },
-  setup(props) {
+  setup(props, { emit }) {
     const articlesStore = useArticlesStore()
+    const localizationStore = useLocalizationStore()
     const isNewArticle = ref()
     const isActionInProgress = ref(false)
     const articlesData = ref<ArticleData[]>([])
@@ -98,7 +100,7 @@ export default defineComponent({
 
             await articlesStore.updateArticle(article, isNewArticle.value)
           } else {
-            console.error('Image upload failed or incomplete response')
+            console.error('Image upload failed')
           }
         }
       } catch (error) {
@@ -109,7 +111,12 @@ export default defineComponent({
       }
     }
 
-    const updateArticleContent = (index: number, updatedContent: ArticleContent) => {}
+    const updateArticleContent = (index: number, updatedContent: ArticleContent) => {
+      const articleId = articlesData.value[index]?.id
+      updatedContent.articleId = articleId
+      articlesContent.value[index] = updatedContent
+      emit('update-content', { articles: articlesContent.value })
+    }
 
     const deleteArticle = async (id: string) => {
       if (!isNewArticle.value) await articlesStore.deleteArticle(id)
@@ -122,6 +129,16 @@ export default defineComponent({
       () => articlesStore.allArticles,
       (newVal) => {
         articlesData.value = newVal
+      },
+      { deep: true, immediate: true },
+    )
+
+    watch(
+      () => localizationStore.content.articles,
+      (newVal) => {
+        if (localizationStore.content.articles) {
+          articlesContent.value = newVal
+        }
       },
       { deep: true, immediate: true },
     )

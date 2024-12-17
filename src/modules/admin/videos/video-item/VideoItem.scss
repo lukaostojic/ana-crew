@@ -14,7 +14,7 @@ $video-height: 200px;
       position: absolute;
       top: 0;
       left: -4px;
-      height: calc(150px + $video-height);
+      height: calc(154px + $video-height);
       border-left: 4px solid $blue-color;
       border-top-left-radius: $default-border-radius;
     }
@@ -22,7 +22,7 @@ $video-height: 200px;
 
   &__url {
     small.error-text {
-      top: 68px;
+      top: 66px;
       background-color: $primary-theme-color3;
       color: $red-color;
     }

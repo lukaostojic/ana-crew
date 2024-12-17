@@ -1,11 +1,23 @@
 @import '../../../../styles/variables';
 
+$image-height: 300px;
+
 .article-item {
   &__wrapper {
     background-color: $primary-theme-color3;
     border-radius: $default-border-radius;
     border-left: 4px solid $primary-theme-color1;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+
+    &:after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -4px;
+      height: calc(178px + $image-height);
+      border-left: 4px solid $blue-color;
+      border-top-left-radius: $default-border-radius;
+    }
   }
 
   &__data {
@@ -20,21 +32,25 @@
       }
     }
   }
+
+  &__content {
+    border-top: 1px solid $border-color-light;
+  }
 }
 
 .image-upload {
   &__card {
     width: 100%;
+    height: $image-height;
     aspect-ratio: 4 / 3;
     border-radius: $default-border-radius;
     background-color: $white-color;
     cursor: pointer;
     overflow: hidden;
     transition: $default-transition;
-    height: 300px;
 
     &.has-preview {
-      background-color: $white-color;
+      background-color: $primary-button-color;
 
       &:after {
         content: '';
@@ -101,12 +117,8 @@
   &__preview {
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    // width: 50%;
-    // height: 50%;
-    // object-fit: cover;
-    // position: relative;
-    // left: 25%;
+    object-fit: contain;
+    height: 300px;
   }
 
   input[type='file'] {
@@ -116,7 +128,7 @@
 
 .external-link {
   small.error-text {
-    top: 68px;
+    top: 66px;
     background-color: $primary-theme-color3;
     color: $red-color;
   }

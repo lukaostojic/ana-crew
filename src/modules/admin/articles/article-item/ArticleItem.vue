@@ -1,7 +1,9 @@
 <template>
-  <div class="article-item__wrapper p-4">
+  <div class="article-item__wrapper p-relative p-4">
+    <h2 v-if="articleContentCopy.heading?.length" class="mb-3">{{ articleContentCopy.heading }}</h2>
+    <h2 v-else class="mb-3">Title</h2>
     <div class="article-item__data d-flex-col justify-sb align-start">
-      <div class="d-flex justify-sb align-center w-100">
+      <div class="d-flex justify-sb align-center w-100 mb-3">
         <div class="external-link d-flex-col p-relative w-100 mr-4">
           <label class="mb-1">External Link - Optional</label>
           <input
@@ -60,7 +62,25 @@
         </div>
       </div>
     </div>
-    <div class="article-item__content"></div>
+    <div class="article-item__content d-flex-col mt-6">
+      <template v-if="!$props.isNewArticle">
+        <!-- Heading Input -->
+        <label class="mb-1 mt-3">Heading</label>
+        <input
+          v-model="articleContentCopy.heading"
+          @input="updateArticleContent"
+          class="input mb-4"
+        />
+        <!-- Content Textarea -->
+        <label class="mb-1">Description</label>
+        <textarea
+          v-model="articleContentCopy.description"
+          @input="updateArticleContent"
+          rows="14"
+          class="mb-1 input textarea"
+        ></textarea>
+      </template>
+    </div>
   </div>
 </template>
 
@@ -78,6 +98,9 @@ export default defineComponent({
       type: Object as PropType<ArticleData>,
       required: true,
     },
+    articleContent: {
+      type: Object,
+    },
   },
   emits: ['update-article-data', 'update-article-content', 'remove-article'],
   setup(props, { emit }) {
@@ -87,6 +110,7 @@ export default defineComponent({
     const imageSrouce = ref()
     const isPreUploadTriggered = ref(false)
     const articleDataCopy = ref<ArticleData>({ ...props.articleData })
+    const articleContentCopy = ref({ ...props.articleContent })
     const isUrlValid = ref()
 
     const articleLabels = computed(() => {
@@ -129,6 +153,10 @@ export default defineComponent({
       }
     }
 
+    const updateArticleContent = () => {
+      emit('update-article-content', articleContentCopy.value)
+    }
+
     const removeArticle = async () => {
       if (props.isNewArticle && !imagePreview.value) {
         emit('remove-article', articleDataCopy.value.id)
@@ -155,16 +183,26 @@ export default defineComponent({
       { deep: true, immediate: true },
     )
 
+    watch(
+      () => props.articleContent,
+      (newVal) => {
+        articleContentCopy.value = { ...newVal }
+      },
+      { deep: true, immediate: true },
+    )
+
     return {
       fileInput,
       articleLabels,
       imagePreview,
       isPreUploadTriggered,
       isUrlValid,
+      articleContentCopy,
       handleFileUpload,
       triggerFileUpload,
       validateUrl,
       updateArticleData,
+      updateArticleContent,
       removeArticle,
     }
   },
