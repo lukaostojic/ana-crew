@@ -21,7 +21,7 @@
         {{ language.name }}
       </li>
     </ul>
-    <div class="selected-languages__list mt-5" :class="{ blured: isOpen }">
+    <div class="selected-languages__list" :class="{ blured: isOpen }">
       <h4>Selected Languages</h4>
       <ul>
         <li

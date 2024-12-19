@@ -4,6 +4,7 @@ $image-height: 300px;
 
 .article-item {
   &__wrapper {
+    padding-bottom: 13px;
     background-color: $primary-theme-color3;
     border-radius: $default-border-radius;
     border-left: 4px solid $primary-theme-color1;

@@ -31,30 +31,27 @@ export const updateExistingArticle = async (
 
 export const deleteArticleById = async (id: string): Promise<void> => {
   try {
-    // Delete the article document
     const articleRef = doc(db, 'articles', id)
     await deleteDoc(articleRef)
 
-    // Fetch all language-specific content
     const languagesSnapshot = await getDocs(collection(db, 'content'))
     const languages = languagesSnapshot.docs.map((doc) => doc.id)
 
-    // Iterate through languages and update content
     for (const language of languages) {
       const languageDocRef = doc(db, 'content', language)
       const languageDocSnapshot = await getDoc(languageDocRef)
 
       if (!languageDocSnapshot.exists()) continue
-
       const data = languageDocSnapshot.data()
       const articles = data.articles || []
       const updatedArticles = articles.filter((article: any) => article.articleId !== id)
+
+      console.log(articles)
 
       if (articles.length === updatedArticles.length) continue
       await updateDoc(languageDocRef, { articles: updatedArticles })
     }
 
-    // Notify user
     const notificationStore = useNotificationStore()
     notificationStore.setNotification('Article has been successfully deleted')
   } catch (error) {

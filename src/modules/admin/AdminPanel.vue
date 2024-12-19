@@ -1,6 +1,6 @@
 <template>
   <!-- Main Header -->
-  <div class="admin__header d-flex justify-sb align-center w-100 p-4">
+  <div class="admin__header d-flex justify-sb align-center p-relative w-100 p-4">
     <div
       @click="toggleSidemenu"
       :class="{ shrinked: !isSidemenuOpened }"
@@ -48,7 +48,7 @@
       </div>
       <!-- Content Header -->
       <div class="admin__save-button d-flex justify-sb align-center p-relative px-4">
-        <div>
+        <div class="ml-5">
           Editing content for:
           <span class="language ml-1 px-2 py-1 text-bold-1">{{ language?.name }}</span>
         </div>
@@ -195,12 +195,11 @@ export default defineComponent({
     }
   },
 })
-// Handle image upload cancelation
+// Handle image / video upload cancelation
+// When removing a language, that language isn't available in all languages array (until refresh)
 
 // When updating a photo, delete the photo with the same id from ImbBB, and replace it with new photo
 // Wnen deleting a photo, delete it from ImgBB as well (CORS?)
-
-// When removing a language, that language isn't available in all languages array (until refresh)
 </script>
 
 <style lang="scss" scoped src="./AdminPanel.scss"></style>

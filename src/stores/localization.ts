@@ -13,6 +13,7 @@ export const useLocalizationStore = defineStore('localization', () => {
   const availableLanguages = ref<Language[]>([])
   const content = ref<Record<string, any>>({
     videos: [],
+    articles: [],
   })
 
   const setLanguage = (language: Language) => {
@@ -29,6 +30,9 @@ export const useLocalizationStore = defineStore('localization', () => {
 
       if (!data.videos) {
         data.videos = []
+      }
+      if (!data.articles) {
+        data.articles = []
       }
       Object.assign(content.value, data)
     }

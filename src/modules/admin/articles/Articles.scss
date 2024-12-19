@@ -1,10 +1,15 @@
 @import '../../../styles/variables';
 
 .articles {
+  &__wrapper {
+    border-top: 1px solid $border-color-light;
+  }
+
   &__add-button {
     button.add {
       right: 168px;
-      bottom: 27px;
+      // bottom: 27px;
+      bottom: 18px;
       width: 160px;
 
       &.disabled {
@@ -27,7 +32,8 @@
     grid-template-columns: repeat(auto-fill, minmax(570px, 1fr));
     align-content: start;
     grid-gap: 20px;
-    height: calc(100vh - 232px);
+    height: calc(100vh - 197px);
+    padding-top: 18px;
     overflow-y: auto;
 
     .list-item {

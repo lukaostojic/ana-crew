@@ -2,7 +2,7 @@
   <div class="article-item__wrapper p-relative p-4">
     <h2 v-if="articleContentCopy.heading?.length" class="mb-3">{{ articleContentCopy.heading }}</h2>
     <h2 v-else class="mb-3">Title</h2>
-    <div class="article-item__data d-flex-col justify-sb align-start">
+    <div class="article-item__data d-flex-col justify-sb align-start mb-3">
       <div class="d-flex justify-sb align-center w-100 mb-3">
         <div class="external-link d-flex-col p-relative w-100 mr-4">
           <label class="mb-1">External Link - Optional</label>
@@ -25,7 +25,7 @@
           <button
             @click="updateArticleData"
             :class="{
-              disabled: !isPreUploadTriggered && !isUrlValid,
+              disabled: isSaveButtonDisabled,
             }"
             class="button button--secondary button--icon mr-2"
           >
@@ -62,24 +62,22 @@
         </div>
       </div>
     </div>
-    <div class="article-item__content d-flex-col mt-6">
-      <template v-if="!$props.isNewArticle">
-        <!-- Heading Input -->
-        <label class="mb-1 mt-3">Heading</label>
-        <input
-          v-model="articleContentCopy.heading"
-          @input="updateArticleContent"
-          class="input mb-4"
-        />
-        <!-- Content Textarea -->
-        <label class="mb-1">Description</label>
-        <textarea
-          v-model="articleContentCopy.description"
-          @input="updateArticleContent"
-          rows="14"
-          class="mb-1 input textarea"
-        ></textarea>
-      </template>
+    <div v-if="!$props.isNewArticle" class="article-item__content d-flex-col mt-6">
+      <!-- Heading Input -->
+      <label class="mb-1 mt-3">Heading</label>
+      <input
+        v-model="articleContentCopy.heading"
+        @input="updateArticleContent"
+        class="input mb-4"
+      />
+      <!-- Content Textarea -->
+      <label class="mb-1">Content</label>
+      <textarea
+        v-model="articleContentCopy.content"
+        @input="updateArticleContent"
+        rows="14"
+        class="mb-1 input textarea"
+      ></textarea>
     </div>
   </div>
 </template>
@@ -110,14 +108,29 @@ export default defineComponent({
     const imageSrouce = ref()
     const isPreUploadTriggered = ref(false)
     const articleDataCopy = ref<ArticleData>({ ...props.articleData })
-    const articleContentCopy = ref({ ...props.articleContent })
-    const isUrlValid = ref()
+    const articleContentCopy = ref<ArticleContent>({ ...props.articleContent })
+    const isUrlValid = ref(true)
+    const isSaveButtonDisabled = ref(true)
 
     const articleLabels = computed(() => {
       return props.isNewArticle
         ? { green: 'Save', red: 'Cancel' }
         : { green: 'Update', red: 'Delete' }
     })
+
+    const checkSaveButtonState = () => {
+      const isNewArticle = props.isNewArticle
+      const hasValidLink = !props.articleData.link || isValidURL(props.articleData.link)
+      const isImageUploaded = !!imagePreview.value || !!articleDataCopy.value.imageUrl
+
+      isSaveButtonDisabled.value =
+        (isNewArticle && !isImageUploaded) ||
+        !hasValidLink ||
+        (!isNewArticle &&
+          articleDataCopy.value.link === props.articleData.link &&
+          !hasValidLink &&
+          !imagePreview.value)
+    }
 
     const triggerFileUpload = () => {
       fileInput.value?.click()
@@ -132,15 +145,16 @@ export default defineComponent({
         const reader = new FileReader()
         reader.onload = () => {
           imagePreview.value = reader.result as string
+          checkSaveButtonState()
         }
         reader.readAsDataURL(file)
       }
     }
 
     const validateUrl = () => {
-      if (props.articleData.link) {
-        isUrlValid.value = isValidURL(props.articleData.link)
-      }
+      const link = props.articleData.link || ''
+      isUrlValid.value = !link || isValidURL(link)
+      checkSaveButtonState()
     }
 
     const updateArticleData = async () => {
@@ -159,7 +173,9 @@ export default defineComponent({
 
     const removeArticle = async () => {
       if (props.isNewArticle && !imagePreview.value) {
+        // resetNewArticleState()
         emit('remove-article', articleDataCopy.value.id)
+        // resetNewArticleState()
         return
       }
 
@@ -173,12 +189,19 @@ export default defineComponent({
       }
     }
 
+    const resetNewArticleState = () => {
+      articleDataCopy.value = { id: '', link: '', imageUrl: '', deleteUrl: '' } // Reset to default state
+      articleContentCopy.value = { heading: '', content: '' }
+      imagePreview.value = null
+    }
+
     watch(
       () => props.articleData,
       (newVal) => {
-        // if (articleDataCopy.value.link === props.articleData.link && props.isNewArticle) {
-        articleDataCopy.value = { ...newVal }
-        // }
+        if (articleDataCopy.value.link === props.articleData.link && props.isNewArticle) {
+          articleDataCopy.value = { ...newVal }
+          checkSaveButtonState()
+        }
       },
       { deep: true, immediate: true },
     )
@@ -198,6 +221,7 @@ export default defineComponent({
       isPreUploadTriggered,
       isUrlValid,
       articleContentCopy,
+      isSaveButtonDisabled,
       handleFileUpload,
       triggerFileUpload,
       validateUrl,

@@ -1,5 +1,5 @@
 <template>
-  <div class="content__wrapper px-4">
+  <div class="content__wrapper mt-4 px-4">
     <div class="inner" v-if="contentData">
       <!-- Header Section -->
       <div class="content__section p-4">
