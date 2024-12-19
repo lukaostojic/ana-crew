@@ -4,6 +4,7 @@
     <h2 v-else class="mb-3">Title</h2>
     <div class="article-item__data d-flex-col justify-sb align-start mb-3">
       <div class="d-flex justify-sb align-center w-100 mb-3">
+        <!-- External Link -->
         <div class="external-link d-flex-col p-relative w-100 mr-4">
           <label class="mb-1">External Link - Optional</label>
           <input
@@ -21,6 +22,7 @@
             Please enter a valid URL
           </small>
         </div>
+        <!-- Actions -->
         <div class="actions d-flex justify-end align-center w-100 mt-5">
           <button
             @click="updateArticleData"
@@ -42,6 +44,7 @@
           </button>
         </div>
       </div>
+      <!-- Image Preview / Upload -->
       <div class="image-upload p-relative w-100 mt-4">
         <input type="file" @change="handleFileUpload" ref="fileInput" />
         <div
