@@ -98,6 +98,20 @@ $left-side-width: 320px;
     top: 8px;
     height: 54px;
 
+    .language-label {
+      transition: $default-transition;
+
+      &.shrinked {
+        left: 24px;
+      }
+    }
+
+    .language-label {
+      @media (max-width: 1200px) {
+        left: 24px;
+      }
+    }
+
     button {
       width: 160px;
       height: 36px;

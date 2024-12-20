@@ -58,7 +58,7 @@ export default defineComponent({
     const isNewArticle = ref()
     const isActionInProgress = ref(false)
     const articlesData = ref<ArticleData[]>([])
-    const articlesContent = ref<ArticleContent>({ ...props.content?.videos })
+    const articlesContent = ref<ArticleContent>({ ...props.content?.articles })
 
     const reversedArticlesData = computed(() => [...articlesData.value].reverse())
 

@@ -27,7 +27,7 @@
           <button
             @click="updateArticleData"
             :class="{
-              disabled: isSaveButtonDisabled,
+              disabled: isSaveButtonDisabled || !isUrlValid,
             }"
             class="button button--secondary button--icon mr-2"
           >
@@ -39,7 +39,7 @@
           <button @click="removeArticle" class="button button--danger button--icon">
             <span>{{ articleLabels.red }}</span>
             <span class="material-symbols-outlined">
-              {{ isNewArticle ? 'close' : 'delete' }}
+              {{ isNewArticle || isArticleDataChanged ? 'close' : 'delete' }}
             </span>
           </button>
         </div>
@@ -89,7 +89,7 @@
 import { defineComponent, ref, computed, watch } from 'vue'
 import type { PropType } from 'vue'
 import { useModalStore } from '../../../../stores/modal'
-import { isValidURL } from '../../../../helpers/helper-functions'
+import { isValidURL, deepEqual } from '../../../../helpers/helper-functions'
 import type { ArticleData, ArticleContent } from '../../../../types/content'
 
 export default defineComponent({
@@ -114,6 +114,7 @@ export default defineComponent({
     const articleContentCopy = ref<ArticleContent>({ ...props.articleContent })
     const isUrlValid = ref(true)
     const isSaveButtonDisabled = ref(true)
+    const isArticleDataChanged = ref(false)
 
     const articleLabels = computed(() => {
       return props.isNewArticle
@@ -122,17 +123,10 @@ export default defineComponent({
     })
 
     const checkSaveButtonState = () => {
-      const isNewArticle = props.isNewArticle
-      const hasValidLink = !props.articleData.link || isValidURL(props.articleData.link)
-      const isImageUploaded = !!imagePreview.value || !!articleDataCopy.value.imageUrl
+      const isImageChanged = imagePreview.value && imagePreview.value !== props.articleData.imageUrl
+      const isLinkChanged = articleDataCopy.value.link !== props.articleData.link
 
-      isSaveButtonDisabled.value =
-        (isNewArticle && !isImageUploaded) ||
-        !hasValidLink ||
-        (!isNewArticle &&
-          articleDataCopy.value.link === props.articleData.link &&
-          !hasValidLink &&
-          !imagePreview.value)
+      isSaveButtonDisabled.value = !(isImageChanged || isLinkChanged)
     }
 
     const triggerFileUpload = () => {
@@ -148,7 +142,7 @@ export default defineComponent({
         const reader = new FileReader()
         reader.onload = () => {
           imagePreview.value = reader.result as string
-          checkSaveButtonState()
+          trackArticleDataChanges()
         }
         reader.readAsDataURL(file)
       }
@@ -157,6 +151,17 @@ export default defineComponent({
     const validateUrl = () => {
       const link = props.articleData.link || ''
       isUrlValid.value = !link || isValidURL(link)
+      trackArticleDataChanges()
+    }
+
+    const trackArticleDataChanges = () => {
+      if (
+        articleDataCopy.value.link !== props.articleData.link ||
+        imagePreview.value !== props.articleData.imageUrl
+      ) {
+        isArticleDataChanged.value = true
+        console.log(props.articleData.link)
+      }
       checkSaveButtonState()
     }
 
@@ -167,6 +172,7 @@ export default defineComponent({
           link: articleDataCopy.value.link,
         })
         isPreUploadTriggered.value = false
+        isSaveButtonDisabled.value = true
       }
     }
 
@@ -176,9 +182,15 @@ export default defineComponent({
 
     const removeArticle = async () => {
       if (props.isNewArticle && !imagePreview.value) {
-        // resetNewArticleState()
         emit('remove-article', articleDataCopy.value.id)
-        // resetNewArticleState()
+        return
+      }
+
+      if (isArticleDataChanged.value) {
+        articleDataCopy.value.link = props.articleData.link
+        imagePreview.value = props.articleData.imageUrl || null
+        isArticleDataChanged.value = false
+        isSaveButtonDisabled.value = true
         return
       }
 
@@ -191,23 +203,6 @@ export default defineComponent({
         emit('remove-article', articleDataCopy.value.id)
       }
     }
-
-    const resetNewArticleState = () => {
-      articleDataCopy.value = { id: '', link: '', imageUrl: '', deleteUrl: '' } // Reset to default state
-      articleContentCopy.value = { heading: '', content: '' }
-      imagePreview.value = null
-    }
-
-    watch(
-      () => props.articleData,
-      (newVal) => {
-        if (articleDataCopy.value.link === props.articleData.link && props.isNewArticle) {
-          articleDataCopy.value = { ...newVal }
-          checkSaveButtonState()
-        }
-      },
-      { deep: true, immediate: true },
-    )
 
     watch(
       () => props.articleContent,
@@ -225,6 +220,7 @@ export default defineComponent({
       isUrlValid,
       articleContentCopy,
       isSaveButtonDisabled,
+      isArticleDataChanged,
       handleFileUpload,
       triggerFileUpload,
       validateUrl,

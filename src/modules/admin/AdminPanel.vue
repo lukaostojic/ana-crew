@@ -48,7 +48,7 @@
       </div>
       <!-- Content Header -->
       <div class="admin__save-button d-flex justify-sb align-center p-relative px-4">
-        <div class="ml-5">
+        <div :class="{ shrinked: !isSidemenuOpened }" class="language-label p-relative ml-5">
           Editing content for:
           <span class="language ml-1 px-2 py-1 text-bold-1">{{ language?.name }}</span>
         </div>
@@ -195,6 +195,7 @@ export default defineComponent({
     }
   },
 })
+// After adding new video / article and canceling it, editing already existing videos / articles triggers new video / article addition
 // Handle image / video upload cancelation
 // When removing a language, that language isn't available in all languages array (until refresh)
 
