@@ -19,18 +19,17 @@
         <span class="material-symbols-outlined no-video"> video_camera_front_off </span>
       </div>
     </div>
-    <div v-else class="videos__list pb-5">
+    <div v-else class="videos__list pb-5 pr-4">
       <div v-for="(videoData, index) in reversedVideosData" :key="videoData.id">
         <VideoItem
-          :allVideos="videosData"
+          class="list-item"
           :videoData="videoData"
           :videoContent="videosContent[videosData.length - 1 - index]"
           :isNewVideo="isNewVideo"
+          :class="{ disabled: isNewVideo && index !== 0 }"
           @update-video-data="updateVideoData(videosData.length - 1 - index, $event)"
           @update-video-content="updateVideoContent(videosData.length - 1 - index, $event)"
           @remove-video="deleteVideo($event)"
-          :class="{ disabled: isNewVideo && index !== 0 }"
-          class="list-item"
         />
       </div>
     </div>

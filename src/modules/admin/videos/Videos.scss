@@ -2,12 +2,13 @@
 
 .videos {
   &__wrapper {
+    padding-right: 0;
     border-top: 1px solid $border-color-light;
   }
 
   &__add-button {
     button.add {
-      right: 168px;
+      right: 184px;
       bottom: 18px;
       width: 160px;
 

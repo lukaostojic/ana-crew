@@ -39,7 +39,7 @@
           <button @click="removeArticle" class="button button--danger button--icon">
             <span>{{ articleLabels.red }}</span>
             <span class="material-symbols-outlined">
-              {{ isNewArticle || isArticleDataChanged ? 'close' : 'delete' }}
+              {{ isNewArticle ? 'close' : 'delete' }}
             </span>
           </button>
         </div>
@@ -62,6 +62,9 @@
           <div class="upload-icon p-absolute">
             <span class="material-symbols-outlined"> perm_media </span>
           </div>
+        </div>
+        <div v-if="isActionInProgress" class="loader p-absolute">
+          <img src="../../../../assets/loading.gif" alt="" />
         </div>
       </div>
     </div>
@@ -95,18 +98,19 @@ import type { ArticleData, ArticleContent } from '../../../../types/content'
 export default defineComponent({
   props: {
     isNewArticle: Boolean,
+    isActionInProgress: Boolean,
     articleData: {
       type: Object as PropType<ArticleData>,
       required: true,
     },
     articleContent: {
-      type: Object,
+      type: Object as PropType<ArticleContent>,
     },
   },
   emits: ['update-article-data', 'update-article-content', 'remove-article'],
   setup(props, { emit }) {
-    const fileInput = ref<HTMLInputElement | null>(null)
     const modalStore = useModalStore()
+    const fileInput = ref<HTMLInputElement | null>(null)
     const imagePreview = ref<string | null>(null)
     const imageSrouce = ref()
     const isPreUploadTriggered = ref(false)
@@ -114,7 +118,6 @@ export default defineComponent({
     const articleContentCopy = ref<ArticleContent>({ ...props.articleContent })
     const isUrlValid = ref(true)
     const isSaveButtonDisabled = ref(true)
-    const isArticleDataChanged = ref(false)
 
     const articleLabels = computed(() => {
       return props.isNewArticle
@@ -142,7 +145,7 @@ export default defineComponent({
         const reader = new FileReader()
         reader.onload = () => {
           imagePreview.value = reader.result as string
-          trackArticleDataChanges()
+          checkSaveButtonState()
         }
         reader.readAsDataURL(file)
       }
@@ -151,25 +154,14 @@ export default defineComponent({
     const validateUrl = () => {
       const link = props.articleData.link || ''
       isUrlValid.value = !link || isValidURL(link)
-      trackArticleDataChanges()
-    }
-
-    const trackArticleDataChanges = () => {
-      if (
-        articleDataCopy.value.link !== props.articleData.link ||
-        imagePreview.value !== props.articleData.imageUrl
-      ) {
-        isArticleDataChanged.value = true
-        console.log(props.articleData.link)
-      }
       checkSaveButtonState()
     }
 
     const updateArticleData = async () => {
-      if (imagePreview.value || articleDataCopy.value.link) {
+      if (imagePreview.value || props.articleData.link !== articleDataCopy.value.link) {
         emit('update-article-data', {
           imageSource: imageSrouce.value,
-          link: articleDataCopy.value.link,
+          link: props.articleData.link,
         })
         isPreUploadTriggered.value = false
         isSaveButtonDisabled.value = true
@@ -183,14 +175,6 @@ export default defineComponent({
     const removeArticle = async () => {
       if (props.isNewArticle && !imagePreview.value) {
         emit('remove-article', articleDataCopy.value.id)
-        return
-      }
-
-      if (isArticleDataChanged.value) {
-        articleDataCopy.value.link = props.articleData.link
-        imagePreview.value = props.articleData.imageUrl || null
-        isArticleDataChanged.value = false
-        isSaveButtonDisabled.value = true
         return
       }
 
@@ -220,7 +204,6 @@ export default defineComponent({
       isUrlValid,
       articleContentCopy,
       isSaveButtonDisabled,
-      isArticleDataChanged,
       handleFileUpload,
       triggerFileUpload,
       validateUrl,

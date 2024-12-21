@@ -19,18 +19,19 @@
         <span class="material-symbols-outlined no-article"> edit_off </span>
       </div>
     </div>
-    <div v-else class="articles__list pb-5">
+    <div v-else class="articles__list pb-5 pr-4">
       <div v-for="(articleData, index) in reversedArticlesData" :key="articleData.id">
         <ArticleItem
+          class="list-item"
+          :class="{ disabled: isNewArticle && index !== 0 }"
           :allArticles="articlesData"
           :articleData="articleData"
           :articleContent="articlesContent[articlesData.length - 1 - index]"
           :isNewArticle="isNewArticle"
+          :isActionInProgress="isActionInProgress"
           @update-article-data="updateArticleData(articlesData.length - 1 - index, $event)"
           @update-article-content="updateArticleContent(articlesData.length - 1 - index, $event)"
           @remove-article="deleteArticle($event)"
-          :class="{ disabled: isNewArticle && index !== 0 }"
-          class="list-item"
         />
       </div>
     </div>
@@ -75,7 +76,7 @@ export default defineComponent({
       isNewArticle.value = true
     }
 
-    const updateArticleData = async (index, data) => {
+    const updateArticleData = async (index: number, data: any) => {
       const article = articlesStore.allArticles[index]
 
       if (!article) {

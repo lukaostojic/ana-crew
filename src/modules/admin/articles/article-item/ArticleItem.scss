@@ -134,3 +134,15 @@ $image-height: 300px;
     color: $red-color;
   }
 }
+
+.loader {
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+
+  img {
+    width: 50%;
+    height: auto;
+  }
+}

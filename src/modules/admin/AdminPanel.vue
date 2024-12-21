@@ -195,6 +195,7 @@ export default defineComponent({
     }
   },
 })
+// When adding new video / article after deletion, console logs an error - there is no index
 // After adding new video / article and canceling it, editing already existing videos / articles triggers new video / article addition
 // Handle image / video upload cancelation
 // When removing a language, that language isn't available in all languages array (until refresh)

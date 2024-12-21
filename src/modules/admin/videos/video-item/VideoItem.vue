@@ -31,7 +31,9 @@
         </button>
         <button @click="removeVideo" class="button button--danger button--icon">
           <span>{{ videoLabels.red }}</span>
-          <span class="material-symbols-outlined"> {{ isNewVideo ? 'close' : 'delete' }} </span>
+          <span class="material-symbols-outlined">
+            {{ isNewVideo || isUrlChanged ? 'close' : 'delete' }}
+          </span>
         </button>
       </div>
     </div>
@@ -78,7 +80,6 @@ import type { VideoData, VideoContent } from '../../../../types/content'
 export default defineComponent({
   name: 'VideoItem',
   props: {
-    allVideos: Array,
     isNewVideo: Boolean,
     videoData: {
       type: Object as PropType<VideoData>,
@@ -102,6 +103,24 @@ export default defineComponent({
         ? { green: 'Save', red: 'Cancel' }
         : { green: 'Update', red: 'Delete' }
     })
+
+    const isUrlChanged = computed(() => {
+      return videoDataCopy.value.url !== props.videoData.url
+    })
+
+    const embedUrl = computed(() => {
+      const url = props.videoData.url
+      const youtubeMatch = url.match(/(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([^&]+)/)
+
+      if (youtubeMatch) {
+        return `https://www.youtube.com/embed/${youtubeMatch[1]}`
+      }
+      return ''
+    })
+
+    const isYouTubeUrl = (url: string) => {
+      return /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=/.test(url)
+    }
 
     const checkSaveButtonState = () => {
       isSaveButtonDisabled.value =
@@ -131,6 +150,11 @@ export default defineComponent({
         return
       }
 
+      if (isUrlChanged.value) {
+        videoDataCopy.value.url = props.videoData.url
+        return
+      }
+
       const message = props.isNewVideo
         ? `Are you sure you want to cancel this action?`
         : `Are you sure you want to delete this video and its content for all the languages? <br><br>This action cannot be undone.`
@@ -141,35 +165,10 @@ export default defineComponent({
       }
     }
 
-    const embedUrl = computed(() => {
-      const url = props.videoData.url
-      const youtubeMatch = url.match(/(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([^&]+)/)
-
-      if (youtubeMatch) {
-        return `https://www.youtube.com/embed/${youtubeMatch[1]}`
-      }
-      return ''
-    })
-
-    const isYouTubeUrl = (url: string) => {
-      return /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=/.test(url)
-    }
-
     watch(
       () => props.videoContent,
       (newVal) => {
         videoContentCopy.value = { ...newVal }
-      },
-      { deep: true, immediate: true },
-    )
-
-    watch(
-      () => props.videoData,
-      (newVal) => {
-        if (videoDataCopy.value.url === props.videoData.url && props.isNewVideo) {
-          videoDataCopy.value = { ...newVal }
-        }
-        checkSaveButtonState()
       },
       { deep: true, immediate: true },
     )
@@ -181,6 +180,7 @@ export default defineComponent({
       isSaveButtonDisabled,
       videoLabels,
       embedUrl,
+      isUrlChanged,
       validateUrl,
       updateVideoData,
       updateVideoContent,
