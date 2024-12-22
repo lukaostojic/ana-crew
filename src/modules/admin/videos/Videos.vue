@@ -1,5 +1,5 @@
 <template>
-  <div class="videos__wrapper mt-4 px-4">
+  <div class="videos__wrapper px-4">
     <div class="videos__add-button d-flex justify-end align-center p-relative">
       <button
         @click="handleAddNewVideo"

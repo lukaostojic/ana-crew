@@ -1,5 +1,5 @@
 <template>
-  <div class="articles__wrapper mt-4 px-4">
+  <div class="articles__wrapper px-4">
     <div class="articles__add-button d-flex justify-end align-center p-relative">
       <button
         @click="handleAddNewArticle"

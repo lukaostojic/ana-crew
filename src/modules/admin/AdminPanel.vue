@@ -58,7 +58,7 @@
           class="button button--ternary button--icon p-relative"
           @click="saveContent()"
         >
-          <span>Save</span>
+          <span>Save Content</span>
           <span class="material-symbols-outlined"> save </span>
         </button>
       </div>

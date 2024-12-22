@@ -1,7 +1,7 @@
 import { db } from '../config/firebase'
 import { getDoc, getDocs, collection, setDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore'
 import { useNotificationStore } from '@/stores/notification'
-import type { VideoContent } from '@/types/content'
+import type { VideoContent, VideoData } from '@/types/content'
 
 export const fetchAllVideos = async () => {
   try {
@@ -11,7 +11,7 @@ export const fetchAllVideos = async () => {
       id: doc.id,
       ...doc.data(),
     }))
-    return videos
+    return videos as VideoData[]
   } catch (error) {
     throw error
   }

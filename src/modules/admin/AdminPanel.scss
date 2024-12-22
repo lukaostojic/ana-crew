@@ -95,8 +95,10 @@ $left-side-width: 320px;
   }
 
   &__save-button {
-    top: 8px;
-    height: 54px;
+    height: 70px;
+    box-shadow: 0px 5px 10px -5px rgba(0, 0, 0, 0.15);
+    z-index: 10;
+    pointer-events: none;
 
     .language-label {
       transition: $default-transition;
