@@ -41,7 +41,11 @@ export const useVideosStore = defineStore('videos', () => {
     }
   }
 
-  const deleteVideo = async (url: string) => {}
+  const deleteVideo = async (id: string) => {
+    allVideos.value.filter((video: any) => {
+      video.id !== id
+    })
+  }
 
   return {
     getAllVideos,

@@ -5,6 +5,16 @@ export const isValidURL = (url: string): boolean => {
   return regex.test(url)
 }
 
+export const isValidEmail = (email: string): boolean => {
+  const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+  return regex.test(email)
+}
+
+export const isValidPhoneNumber = (phone: string): boolean => {
+  const regex = /^\+?[1-9]\d{1,14}$/
+  return regex.test(phone)
+}
+
 export const deepEqual = (obj1: any, obj2: any): boolean => {
   return JSON.stringify(obj1) === JSON.stringify(obj2)
 }

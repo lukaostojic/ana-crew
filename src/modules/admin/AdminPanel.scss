@@ -8,9 +8,19 @@ $left-side-width: 320px;
     box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
 
+    .help {
+      cursor: pointer;
+
+      span {
+        font-size: 30px;
+        font-weight: 500;
+      }
+    }
+
     .sidemenu-close {
       left: 306px;
       top: 146px;
+      top: 140px;
       width: 30px;
       height: 30px;
       background-color: $white-color;
@@ -96,6 +106,7 @@ $left-side-width: 320px;
 
   &__save-button {
     height: 70px;
+    height: 58px;
     box-shadow: 0px 5px 10px -5px rgba(0, 0, 0, 0.15);
     z-index: 10;
     pointer-events: none;
@@ -118,6 +129,7 @@ $left-side-width: 320px;
       width: 160px;
       height: 36px;
       z-index: 5;
+      pointer-events: auto;
     }
 
     .language {

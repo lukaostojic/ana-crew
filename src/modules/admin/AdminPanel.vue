@@ -10,6 +10,9 @@
     </div>
     <h2>Admin Panel</h2>
     <div class="d-flex">
+      <div class="help d-flex align-center mr-2">
+        <span class="material-symbols-outlined"> help </span>
+      </div>
       <button @click="goToWebsite" class="button button--primary button--icon mr-2">
         <span>Go to Website</span><span class="material-symbols-outlined"> globe </span>
       </button>
@@ -36,7 +39,7 @@
             'tab',
             {
               active: isSelectedTab(tab.label),
-              'unsaved-changes': !isSaveButtonDisabled && tab.label === 'Content',
+              'unsaved-changes': !isSaveButtonDisabled && tab.label === 'Text',
             },
           ]"
           @click="navigateTo(tab.route)"
@@ -107,11 +110,11 @@ export default defineComponent({
     const isSidemenuOpened = ref(true)
     const activeTab = ref(0)
     const tabs = ref([
-      { label: 'Content', icon: 'edit_square', route: '/admin/content' },
+      { label: 'Text', icon: 'edit_square', route: '/admin/content' },
       { label: 'Videos', icon: 'movie', route: '/admin/videos' },
       { label: 'Articles', icon: 'clarify', route: '/admin/articles' },
-      // { label: 'Photo Galleries', icon: 'photo_library', route: '/admin/galleries' },
-      // { label: 'Artists', icon: 'music_note', route: '/admin/artists' },
+      { label: 'Artists', icon: 'music_note', route: '/admin/artists' },
+      { label: 'Contact', icon: 'contact_page', route: '/admin/contact' },
     ])
 
     const isSelectedTab = (tabName: string) => {

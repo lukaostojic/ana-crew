@@ -8,7 +8,7 @@
   &__add-button {
     button.add {
       right: 184px;
-      bottom: 18px;
+      bottom: 11px;
       width: 160px;
 
       &.disabled {
@@ -31,7 +31,7 @@
     grid-template-columns: repeat(auto-fill, minmax(440px, 1fr));
     align-content: start;
     grid-gap: 20px;
-    height: calc(100vh - 197px);
+    height: calc(100vh - 184px);
     padding-top: 18px;
     overflow-y: auto;
 

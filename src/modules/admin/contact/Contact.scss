@@ -1,0 +1,37 @@
+@import '../../../styles/variables';
+
+.contact {
+  &__wrapper {
+    padding-right: 0;
+  }
+
+  &__save-button {
+    button.save {
+      right: 184px;
+      bottom: 11px;
+      width: 160px;
+
+      &.disabled {
+        opacity: 0.5;
+        pointer-events: none;
+      }
+    }
+  }
+
+  &__list {
+    flex-wrap: wrap;
+    gap: 20px;
+    // height: calc(100vh - 184px);
+    padding-top: 18px;
+    overflow-y: auto;
+  }
+
+  &__item {
+    flex: 1 1 320px;
+    max-height: 96px;
+    background-color: $primary-theme-color3;
+    border-radius: $default-border-radius;
+    border-left: 4px solid $blue-color;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  }
+}
