@@ -87,7 +87,6 @@ export default defineComponent({
     },
     videoContent: {
       type: Object as PropType<VideoContent>,
-      required: true,
     },
   },
   emits: ['update-video-data', 'update-video-content', 'remove-video'],

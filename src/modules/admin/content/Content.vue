@@ -1,6 +1,6 @@
 <template>
   <div class="content__wrapper mt-4 px-4">
-    <div class="inner pr-4" v-if="contentData">
+    <div class="inner pr-5" v-if="contentData">
       <!-- Header Section -->
       <div class="content__section p-4">
         <h2 class="mb-5">Header</h2>

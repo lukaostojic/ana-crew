@@ -1,8 +1,18 @@
 <template>
-  <div class="article-item__wrapper p-relative p-4">
-    <h2 v-if="articleContentCopy.heading?.length" class="mb-3">{{ articleContentCopy.heading }}</h2>
-    <h2 v-else class="mb-3">Title</h2>
-    <div class="article-item__data d-flex-col justify-sb align-start mb-3">
+  <div :class="{ 'hide-data': !isDataVisible }" class="article-item__wrapper p-relative p-4">
+    <div class="d-flex justify-sb align-center">
+      <h2 v-if="articleContentCopy.heading?.length" class="mb-3">
+        {{ articleContentCopy.heading }}
+      </h2>
+      <h2 v-else class="mb-3">Title</h2>
+      <span
+        @click="isDataVisible = !isDataVisible"
+        class="material-symbols-outlined dropdown-arrow hide-data-icon mb-3 p-1"
+      >
+        {{ isDataVisible ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}
+      </span>
+    </div>
+    <div v-if="isDataVisible" class="article-item__data d-flex-col justify-sb align-start mb-3">
       <div class="d-flex justify-sb align-center w-100 mb-3">
         <!-- External Link -->
         <div class="external-link d-flex-col p-relative w-100 mr-4">
@@ -68,7 +78,11 @@
         </div>
       </div>
     </div>
-    <div v-if="!$props.isNewArticle" class="article-item__content d-flex-col mt-6">
+    <div
+      v-if="!$props.isNewArticle"
+      :style="{ marginTop: isDataVisible ? '' : '0' }"
+      class="article-item__content d-flex-col mt-6"
+    >
       <!-- Heading Input -->
       <label class="mb-1 mt-3">Heading</label>
       <input
@@ -118,6 +132,7 @@ export default defineComponent({
     const articleContentCopy = ref<ArticleContent>({ ...props.articleContent })
     const isUrlValid = ref(true)
     const isSaveButtonDisabled = ref(true)
+    const isDataVisible = ref(true)
 
     const articleLabels = computed(() => {
       return props.isNewArticle
@@ -204,6 +219,7 @@ export default defineComponent({
       isUrlValid,
       articleContentCopy,
       isSaveButtonDisabled,
+      isDataVisible,
       handleFileUpload,
       triggerFileUpload,
       validateUrl,

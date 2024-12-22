@@ -19,7 +19,7 @@
         <span class="material-symbols-outlined no-article"> edit_off </span>
       </div>
     </div>
-    <div v-else class="articles__list pb-5 pr-4">
+    <div v-else class="articles__list pb-5 pr-5">
       <div v-for="(articleData, index) in reversedArticlesData" :key="articleData.id">
         <ArticleItem
           class="list-item"

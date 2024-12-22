@@ -19,7 +19,7 @@
         <span class="material-symbols-outlined no-video"> video_camera_front_off </span>
       </div>
     </div>
-    <div v-else class="videos__list pb-5 pr-4">
+    <div v-else class="videos__list pb-5 pr-5">
       <div v-for="(videoData, index) in reversedVideosData" :key="videoData.id">
         <VideoItem
           class="list-item"

@@ -5,13 +5,17 @@ $container-width: 320px;
 .dropdown {
   &__wrapper {
     width: $container-width;
-    background-color: $primary-theme-color3;
+    background-color: #fcfcfc;
+    box-shadow:
+      0 4px 6px rgba(0, 0, 0, 0.1),
+      0 2px 4px rgba(0, 0, 0, 0.06);
   }
 
   &__header {
     border: 1px solid $border-color-light;
     border-radius: $default-border-radius;
     background-color: $white-color;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     cursor: pointer;
 
     .dropdown-arrow {
@@ -67,7 +71,7 @@ $container-width: 320px;
 
 .selected-languages {
   &__list {
-    margin-top: 34px;
+    margin-top: 36px;
     transition: all 0.15s ease-in-out;
 
     &.blured {
